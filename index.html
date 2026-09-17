@@ -758,8 +758,10 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
   </div>
 </div>
 
-<!-- Firebase -->
+<!-- Firebase: 3 SDK diperlukan (App, Auth, Firestore) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDNkY5nNuUoIhxU_yc6hMiYfxxP4UvKpqE",
@@ -770,6 +772,10 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
     appId: "1:286627920763:web:69031d00463505487d1bde"
   };
   const firebaseApp = firebase.initializeApp(firebaseConfig);
+  // FIREBASE_ENABLED, fbAuth, fbDB digunakan oleh app.js di bawah
+  var FIREBASE_ENABLED = true;
+  var fbAuth = firebase.auth();
+  var fbDB = firebase.firestore();
 </script>
 
 <script>
@@ -895,26 +901,64 @@ function generateSeedData(){
   return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications};
 }
 
-function loadData(){
+function loadLocalData(){
   var raw = localStorage.getItem('emengaji_data');
   if(raw){
     try{ appState = JSON.parse(raw); }catch(e){ appState = generateSeedData(); }
   } else {
     appState = generateSeedData();
   }
+}
+
+async function loadData(){
+  if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
+    try{
+      var docRef = fbDB.collection('emengaji').doc('mainData');
+      var snap = await docRef.get();
+      if(snap.exists){
+        appState = snap.data();
+      } else {
+        appState = generateSeedData();
+        await docRef.set(appState);
+      }
+      // Dengar perubahan masa nyata - bila admin/guru lain simpan data,
+      // peranti ini akan terima kemaskini automatik tanpa refresh.
+      docRef.onSnapshot(function(liveSnap){
+        if(liveSnap.exists && liveSnap.metadata.hasPendingWrites === false){
+          var cu = appState.currentUser;
+          appState = liveSnap.data();
+          appState.currentUser = cu;
+          if(appState.currentUser){ router(); }
+        }
+      });
+    }catch(e){
+      console.error('Ralat Firestore, guna localStorage sahaja sebagai sandaran:', e);
+      loadLocalData();
+    }
+  } else {
+    loadLocalData();
+  }
   if(!appState.announcements) appState.announcements = [];
   if(!appState.notifications) appState.notifications = [];
   var savedUser = sessionStorage.getItem('emengaji_user');
   appState.currentUser = savedUser? JSON.parse(savedUser): null;
-  saveData();
 }
-function saveData(){
+
+async function saveData(){
   var toSave = {
     students: appState.students, teachers: appState.teachers, classes: appState.classes,
     attendance: appState.attendance, readingRecords: appState.readingRecords, feePayments: appState.feePayments,
     registrations: appState.registrations, notifications: appState.notifications, announcements: appState.announcements
   };
   localStorage.setItem('emengaji_data', JSON.stringify(toSave));
+  if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
+    try{
+      await fbDB.collection('emengaji').doc('mainData').set(toSave);
+    }catch(e){
+      console.error('Gagal simpan ke Firestore (data hanya tersimpan tempatan buat masa ini):', e);
+      toast('Amaran: gagal sync ke server. Semak sambungan internet.', 'error');
+    }
+  }
 }
 function resetDemoData(){
   localStorage.removeItem('emengaji_data');
@@ -968,7 +1012,13 @@ function fillDemo(kind){
 function clearFieldError(id){ var f=document.getElementById(id); if(f) f.classList.remove('has-error'); }
 function setFieldError(id){ var f=document.getElementById(id); if(f) f.classList.add('has-error'); }
 
-function handleLogin(e){
+function redirectByRole(role){
+  if(role==='admin') go('/admin/dashboard');
+  else if(role==='guru') go('/teacher/dashboard');
+  else go('/parent/dashboard');
+}
+
+async function handleLogin(e){
   e.preventDefault();
   clearFieldError('loginEmailField'); clearFieldError('loginPassField');
   var email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -977,22 +1027,48 @@ function handleLogin(e){
   if(!email){ setFieldError('loginEmailField'); ok=false; }
   if(!pass){ setFieldError('loginPassField'); ok=false; }
   if(!ok) return false;
-  var acc = DEMO_ACCOUNTS[email];
-  if(!acc || acc.password !== pass){
+
+  if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
+    try{
+      await fbAuth.signInWithEmailAndPassword(email, pass);
+      // Peranan (admin/guru/ibu bapa) masih dirujuk dari senarai DEMO_ACCOUNTS
+      // dalam kod ini. TAMBAH baris baharu dalam DEMO_ACCOUNTS setiap kali
+      // admin daftar akaun baharu dalam Firebase Authentication.
+      var acc = DEMO_ACCOUNTS[email];
+      if(!acc){
+        toast('Log masuk Firebase berjaya, tetapi peranan akaun ini belum didaftarkan dalam kod. Hubungi admin sistem.', 'error');
+        await fbAuth.signOut();
+        return false;
+      }
+      appState.currentUser = {email:email, role:acc.role, name:acc.name, id:acc.id};
+      sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
+      toast('Log masuk berjaya. Selamat kembali, '+acc.name+'!');
+      redirectByRole(acc.role);
+    }catch(err){
+      console.error(err);
+      toast('Email atau kata laluan tidak sah.', 'error');
+    }
+    return false;
+  }
+
+  // Mod tanpa Firebase (sandaran/ujian sahaja)
+  var acc2 = DEMO_ACCOUNTS[email];
+  if(!acc2 || acc2.password !== pass){
     toast('Email atau kata laluan tidak sah. Sila cuba akaun demo.', 'error');
     return false;
   }
-  appState.currentUser = {email:email, role:acc.role, name:acc.name, id:acc.id};
+  appState.currentUser = {email:email, role:acc2.role, name:acc2.name, id:acc2.id};
   sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
-  toast('Log masuk berjaya. Selamat kembali, '+acc.name+'!');
-  if(acc.role==='admin') go('/admin/dashboard');
-  else if(acc.role==='guru') go('/teacher/dashboard');
-  else go('/parent/dashboard');
+  toast('Log masuk berjaya. Selamat kembali, '+acc2.name+'!');
+  redirectByRole(acc2.role);
   return false;
 }
 function logout(){
   appState.currentUser = null;
   sessionStorage.removeItem('emengaji_user');
+  if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED && fbAuth){
+    fbAuth.signOut().catch(function(){});
+  }
   go('/login');
 }
 
@@ -2051,8 +2127,7 @@ function handleRegistration(e){
 /* =========================================================
    INIT
 ========================================================= */
-loadData();
-router();
+loadData().then(function(){ router(); });
 </script>
 </body>
 </html>
