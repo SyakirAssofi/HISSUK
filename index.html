@@ -1001,7 +1001,13 @@ function confirmAction(msg, onConfirm){
 var DEMO_ACCOUNTS = {
   'admin@emengaji.test': {password:'admin123', role:'admin', name:'Admin', id:'admin1'},
   'guru@emengaji.test': {password:'guru123', role:'guru', name:'Ustaz Ahmad', id:'t1'},
-  'parent@emengaji.test': {password:'parent123', role:'parent', name:'Nurul Huda', id:'p1'}
+  'parent@emengaji.test': {password:'parent123', role:'parent', name:'Nurul Huda', id:'p1', guardianName:'Nurul Huda'},
+  // Akaun sebenar yang didaftarkan dalam Firebase Authentication:
+  'syakirassofi96@gmail.com': {password:'', role:'admin', name:'Admin', id:'admin1'},
+  // Ibu bapa: guardianName MESTI sama persis dengan "Nama Penjaga" pada rekod pelajar
+  'aidaafiqah@hissuk.com': {password:'', role:'parent', name:'Aida Afiqah', id:'p2', guardianName:'Aida Afiqah'},
+  // Guru: id di bawah PERLU ditukar selepas guru ditambah dalam Admin > Guru (lihat arahan)
+  'ustazsyakir@hissuk.com': {password:'', role:'guru', name:'Ustaz Syakir', id:'GANTI_DENGAN_ID_SEBENAR'}
 };
 function fillDemo(kind){
   var map = {admin:'admin@emengaji.test', guru:'guru@emengaji.test', parent:'parent@emengaji.test'};
@@ -1040,7 +1046,7 @@ async function handleLogin(e){
         await fbAuth.signOut();
         return false;
       }
-      appState.currentUser = {email:email, role:acc.role, name:acc.name, id:acc.id};
+      appState.currentUser = {email:email, role:acc.role, name:acc.name, id:acc.id, guardianName:acc.guardianName||null};
       sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
       toast('Log masuk berjaya. Selamat kembali, '+acc.name+'!');
       redirectByRole(acc.role);
@@ -1057,7 +1063,7 @@ async function handleLogin(e){
     toast('Email atau kata laluan tidak sah. Sila cuba akaun demo.', 'error');
     return false;
   }
-  appState.currentUser = {email:email, role:acc2.role, name:acc2.name, id:acc2.id};
+  appState.currentUser = {email:email, role:acc2.role, name:acc2.name, id:acc2.id, guardianName:acc2.guardianName||null};
   sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
   toast('Log masuk berjaya. Selamat kembali, '+acc2.name+'!');
   redirectByRole(acc2.role);
@@ -1968,6 +1974,9 @@ var PARENT_TITLES = {
 var selectedChildId = null;
 function getMyChildren(){
   var user = appState.currentUser;
+  if(user.guardianName){
+    return appState.students.filter(function(s){return s.guardianName===user.guardianName;});
+  }
   if(user.id==='p1') return appState.students.filter(function(s){return s.guardianName==='Nurul Huda';});
   return appState.students.filter(function(s){return s.guardianPhone===user.phone;});
 }
