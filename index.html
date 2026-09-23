@@ -902,7 +902,9 @@ function generateSeedData(){
     {id:uid('n'), text:'Ustazah Siti telah menghantar rekod bacaan baru.', time:'1 hari lalu', read:false}
   ];
 
-  return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications};
+  var leaveRequests = [];
+
+  return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests};
 }
 
 function loadLocalData(){
@@ -944,6 +946,7 @@ async function loadData(){
   }
   if(!appState.announcements) appState.announcements = [];
   if(!appState.notifications) appState.notifications = [];
+  if(!appState.leaveRequests) appState.leaveRequests = [];
   var savedUser = sessionStorage.getItem('emengaji_user');
   appState.currentUser = savedUser? JSON.parse(savedUser): null;
 }
@@ -1211,7 +1214,9 @@ function iconSvg(name){
     child:'<circle cx="12" cy="8" r="4"/><path d="M6 21v-1a6 6 0 0 1 12 0v1"/>',
     profile:'<circle cx="12" cy="8" r="4"/><path d="M6 21v-1a6 6 0 0 1 12 0v1"/>',
     check:'<path d="m20 6-11 11-5-5"/>',
-    whatsapp:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/>'
+    whatsapp:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/>',
+    leave:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9.5 14.5 5 5M14.5 14.5l-5 5"/>',
+    alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
   };
   return '<svg class="icon" viewBox="0 0 24 24">'+(icons[name]||icons.dashboard)+'</svg>';
 }
@@ -1232,6 +1237,7 @@ var ADMIN_MENU = [
   {key:'guru', label:'Guru', icon:'teachers'},
   {key:'kelas', label:'Kelas', icon:'classes'},
   {key:'pendaftaran', label:'Pendaftaran', icon:'registrations'},
+  {key:'cuti', label:'Cuti Guru', icon:'leave'},
   {key:'kehadiran', label:'Kehadiran', icon:'attendance'},
   {key:'bacaan', label:'Rekod Bacaan', icon:'reading'},
   {key:'yuran', label:'Yuran', icon:'fees'},
@@ -1249,7 +1255,7 @@ function closeMobileSidebar(role){ if(window.innerWidth<=980) toggleSidebar(role
 var ADMIN_TITLES = {
   dashboard:['Dashboard','Selamat datang, Admin!'], pelajar:['Pengurusan Pelajar','Urus semua rekod pelajar pusat mengaji'],
   guru:['Pengurusan Guru','Urus maklumat dan penugasan guru'], kelas:['Pengurusan Kelas','Urus kelas dan jadual'],
-  pendaftaran:['Pendaftaran Online','Semak dan luluskan permohonan baru'], kehadiran:['Rekod Kehadiran','Lihat kehadiran mengikut kelas dan tarikh'],
+  pendaftaran:['Pendaftaran Online','Semak dan luluskan permohonan baru'], cuti:['Permohonan Cuti Guru','Semak permohonan cuti dan cari pengganti'], kehadiran:['Rekod Kehadiran','Lihat kehadiran mengikut kelas dan tarikh'],
   bacaan:['Rekod Bacaan','Pantau kemajuan bacaan semua pelajar'], yuran:['Pengurusan Yuran','Jejak kutipan dan tunggakan yuran'],
   laporan:['Laporan','Jana laporan bulanan pelajar'], notifikasi:['Notifikasi','Kemaskini terkini sistem'],
   pengumuman:['Pengumuman','Urus pengumuman untuk guru dan ibu bapa'], tetapan:['Tetapan Sistem','Konfigurasi am sistem E-Mengaji']
@@ -1269,7 +1275,7 @@ function renderAdmin(section){
   var c = document.getElementById('adminContent');
   var renderers = {
     dashboard: renderAdminDashboard, pelajar: renderAdminStudents, guru: renderAdminTeachers,
-    kelas: renderAdminClasses, pendaftaran: renderAdminRegistrations, kehadiran: renderAdminAttendance,
+    kelas: renderAdminClasses, pendaftaran: renderAdminRegistrations, cuti: renderAdminLeave, kehadiran: renderAdminAttendance,
     bacaan: renderAdminReading, yuran: renderAdminFees, laporan: renderAdminReports,
     notifikasi: renderAdminNotifications, pengumuman: renderAdminAnnouncements, tetapan: renderAdminSettings
   };
@@ -1293,7 +1299,22 @@ function renderAdminDashboard(c){
   var feeTotal = fStats.paidCount+fStats.pendingCount || 1;
   var feePct = Math.round(fStats.paidCount/feeTotal*100);
 
+  var todayISO_ = todayISO();
+  var teachersOnLeaveToday = appState.teachers.filter(function(t){ return isTeacherOnLeave(t.id, todayISO_); });
   var html = '';
+
+  if(teachersOnLeaveToday.length>0){
+    html += '<div class="card card-pad" style="border:1.5px solid var(--danger);background:var(--danger-light);margin-bottom:20px;display:flex;gap:14px;align-items:flex-start;">';
+    html += '<div style="color:var(--danger);flex-shrink:0;">'+iconSvg('alert')+'</div><div>';
+    html += '<h4 style="font-size:15px;color:var(--danger);margin-bottom:8px;">Amaran: '+teachersOnLeaveToday.length+' guru bercuti hari ini</h4>';
+    teachersOnLeaveToday.forEach(function(t){
+      var clsToday = appState.classes.filter(function(cl){return cl.teacherId===t.id;});
+      html += '<div style="font-size:13.5px;margin-bottom:6px;"><strong>'+t.name+'</strong> &mdash; kelas perlu pengganti: '+(clsToday.length? clsToday.map(function(cl){return cl.name;}).join(', ') : 'Tiada kelas hari ini')+'</div>';
+    });
+    html += "<button class='btn btn-danger btn-sm' style='margin-top:6px;' onclick=\"go('/admin/cuti')\">Urus Cuti Guru</button>";
+    html += '</div></div>';
+  }
+
   html += '<div class="stat-grid">';
   html += statCard('Jumlah Pelajar', activeStudents.length, 'Aktif: '+activeStudents.length+' &middot; Tidak aktif: '+(appState.students.length-activeStudents.length), 'students', 'var(--emerald)');
   html += statCard('Jumlah Guru', appState.teachers.length, 'Aktif: '+appState.teachers.length, 'teachers', 'var(--gold)');
@@ -1587,6 +1608,59 @@ function rejectRegistration(id){
   var r = appState.registrations.filter(function(x){return x.id===id;})[0];
   confirmAction('Tolak pendaftaran <strong>'+r.childName+'</strong>?', function(){
     r.status='Rejected'; saveData(); renderAdminRegistrations(document.getElementById('adminContent')); toast('Pendaftaran ditolak.','warn');
+  });
+}
+
+/* ---- Admin: Permohonan Cuti Guru ---- */
+function isTeacherOnLeave(teacherId, dateISO){
+  return appState.leaveRequests.filter(function(l){
+    return l.teacherId===teacherId && l.status==='Approved' && dateISO>=l.dateFrom && dateISO<=l.dateTo;
+  })[0] || null;
+}
+function renderAdminLeave(c){
+  var pendingCount = appState.leaveRequests.filter(function(l){return l.status==='Pending';}).length;
+  c.innerHTML =
+  '<div class="tabs">'+
+    '<button class="tab-btn active" data-tab="Pending" onclick="switchLeaveTab(this,\'Pending\')">Menunggu ('+pendingCount+')</button>'+
+    '<button class="tab-btn" data-tab="Approved" onclick="switchLeaveTab(this,\'Approved\')">Diluluskan</button>'+
+    '<button class="tab-btn" data-tab="Rejected" onclick="switchLeaveTab(this,\'Rejected\')">Ditolak</button>'+
+  '</div>'+
+  '<div class="card"><div class="table-wrap"><table><thead><tr><th>Guru</th><th>Tarikh Mula</th><th>Tarikh Akhir</th><th>Sebab</th><th>Tarikh Mohon</th><th>Tindakan</th></tr></thead><tbody id="leaveTableBody"></tbody></table></div></div>';
+  renderLeaveTable('Pending');
+}
+function switchLeaveTab(btn, tab){
+  var btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderLeaveTable(tab);
+}
+function renderLeaveTable(status){
+  var body = document.getElementById('leaveTableBody');
+  var list = appState.leaveRequests.filter(function(l){return l.status===status;}).sort(function(a,b){return b.submittedAt.localeCompare(a.submittedAt);});
+  if(list.length===0){ body.innerHTML = emptyRow(6); return; }
+  body.innerHTML = list.map(function(l){
+    var actions = '';
+    if(status==='Pending'){
+      actions = '<button class="icon-action" title="Luluskan" onclick="approveLeave(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg></button>'+
+      '<button class="icon-action danger" title="Tolak" onclick="rejectLeave(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
+    } else {
+      actions = '<span style="font-size:12px;color:var(--muted);">-</span>';
+    }
+    return '<tr><td>'+l.teacherName+'</td><td>'+fmtDate(l.dateFrom)+'</td><td>'+fmtDate(l.dateTo)+'</td><td>'+l.reason+'</td><td>'+fmtDate(l.submittedAt)+'</td><td><div class="row-actions">'+actions+'</div></td></tr>';
+  }).join('');
+}
+function approveLeave(id){
+  var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
+  confirmAction('Luluskan cuti <strong>'+l.teacherName+'</strong> dari '+fmtDate(l.dateFrom)+' hingga '+fmtDate(l.dateTo)+'? Admin perlu cari guru pengganti untuk tempoh ini.', function(){
+    l.status='Approved';
+    pushNotification('Cuti '+l.teacherName+' ('+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+') diluluskan. Sila cari guru pengganti.');
+    saveData(); renderAdminLeave(document.getElementById('adminContent')); toast('Permohonan cuti diluluskan.');
+  });
+}
+function rejectLeave(id){
+  var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
+  confirmAction('Tolak permohonan cuti <strong>'+l.teacherName+'</strong>?', function(){
+    l.status='Rejected'; saveData(); renderAdminLeave(document.getElementById('adminContent')); toast('Permohonan cuti ditolak.','warn');
   });
 }
 
@@ -1905,9 +1979,9 @@ function saveAttendance(){
     if(rec){ rec.status = rows[studentId].status; rec.note = rows[studentId].note; }
     else appState.attendance.push({id:uid('a'), date:date, classId:classId, studentId:studentId, status:rows[studentId].status, note:rows[studentId].note});
   });
-  var teacherObj = appState.currentUser ? teacherById(appState.currentUser.id) : null;
   var clsObj = classById(classId);
-  pushNotification((teacherObj?teacherObj.name:'Seorang guru')+' telah merekod kehadiran kelas '+(clsObj?clsObj.name:'-')+' pada '+fmtDate(date)+'.');
+  var teacherNameForNotif = appState.currentUser ? appState.currentUser.name : 'Seorang guru';
+  pushNotification(teacherNameForNotif+' telah merekod kehadiran kelas '+(clsObj?clsObj.name:'-')+' pada '+fmtDate(date)+'.');
   saveData();
   toast('Kehadiran berjaya disimpan!');
 }
@@ -1964,20 +2038,43 @@ function saveReadingRecord(studentId){
     note: document.getElementById('rNote').value.trim()
   };
   appState.readingRecords.unshift(rec);
-  var teacherObj2 = appState.currentUser ? teacherById(appState.currentUser.id) : null;
   var stuObj = studentById(studentId);
-  pushNotification((teacherObj2?teacherObj2.name:'Seorang guru')+' telah merekod bacaan untuk '+(stuObj?stuObj.fullName:'seorang pelajar')+'.');
+  var teacherNameForNotif2 = appState.currentUser ? appState.currentUser.name : 'Seorang guru';
+  pushNotification(teacherNameForNotif2+' telah merekod bacaan untuk '+(stuObj?stuObj.fullName:'seorang pelajar')+'.');
   saveData();
   toast('Rekod bacaan berjaya disimpan!');
   renderReadingFormFor(studentId);
 }
 function renderTeacherProfile(c, teacher){
   var myClasses = appState.classes.filter(function(cl){return cl.teacherId===teacher.id;});
+  var myLeaves = appState.leaveRequests.filter(function(l){return l.teacherId===teacher.id;}).sort(function(a,b){return b.submittedAt.localeCompare(a.submittedAt);});
   c.innerHTML =
   '<div class="today-card" style="text-align:center;"><div class="avatar" style="width:64px;height:64px;font-size:20px;margin:0 auto 12px;background:var(--emerald);">'+initials(teacher.name)+'</div><h3>'+teacher.name+'</h3><p style="font-size:13px;color:var(--muted);margin-top:4px;">'+teacher.email+'</p><p style="font-size:13px;color:var(--muted);">'+teacher.phone+'</p></div>'+
   '<div class="t-section-title">Kelas Ditugaskan</div>'+
   myClasses.map(function(cl){ return '<div class="t-class-item"><div class="cname">'+cl.name+'</div><div class="ctime">'+cl.time+'</div></div>'; }).join('')+
+  '<div class="t-section-title">Permohonan Cuti</div>'+
+  '<button class="btn btn-primary btn-block" style="margin-bottom:12px;" onclick="openLeaveForm(\''+teacher.id+'\',\''+teacher.name.replace(/'/g,'')+'\')">'+iconSvg('leave')+' Mohon Cuti Baharu</button>'+
+  (myLeaves.length? myLeaves.map(function(l){ return '<div class="t-class-item"><div><div class="cname">'+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+'</div><div class="ctime">'+l.reason+'</div></div>'+statusBadge(l.status)+'</div>'; }).join('') : '<div class="empty-state">Tiada rekod permohonan cuti.</div>')+
   '<button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="logout()">Log Keluar</button>';
+}
+function openLeaveForm(teacherId, teacherName){
+  openModal('Mohon Cuti',
+    '<div class="input-row"><div class="field"><label>Tarikh Mula</label><input type="date" id="lvDateFrom" value="'+todayISO()+'"></div><div class="field"><label>Tarikh Akhir</label><input type="date" id="lvDateTo" value="'+todayISO()+'"></div></div>'+
+    '<div class="field"><label>Sebab Cuti</label><textarea id="lvReason" placeholder="Contoh: Cuti sakit, urusan keluarga, dll."></textarea></div>',
+    '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="submitLeaveRequest(\''+teacherId+'\',\''+teacherName+'\')">Hantar Permohonan</button>');
+}
+function submitLeaveRequest(teacherId, teacherName){
+  var dateFrom = document.getElementById('lvDateFrom').value;
+  var dateTo = document.getElementById('lvDateTo').value;
+  var reason = document.getElementById('lvReason').value.trim();
+  if(!dateFrom || !dateTo || !reason){ toast('Sila lengkapkan semua ruangan.', 'error'); return; }
+  if(dateTo < dateFrom){ toast('Tarikh akhir mesti selepas atau sama dengan tarikh mula.', 'error'); return; }
+  appState.leaveRequests.unshift({id:uid('lv'), teacherId:teacherId, teacherName:teacherName, dateFrom:dateFrom, dateTo:dateTo, reason:reason, status:'Pending', submittedAt:todayISO()});
+  pushNotification(teacherName+' memohon cuti dari '+fmtDate(dateFrom)+' hingga '+fmtDate(dateTo)+' (sebab: '+reason+').');
+  saveData();
+  closeModal();
+  toast('Permohonan cuti dihantar. Menunggu kelulusan admin.');
+  renderTeacher('profil');
 }
 function renderTeacherNotif(c){
   c.innerHTML = '<div class="t-section-title" style="margin-top:0;">Notifikasi</div>' + (appState.notifications.map(function(n){ return '<div class="t-class-item"><div class="cname" style="font-weight:500;">'+n.text+'</div><div class="ctime">'+n.time+'</div></div>'; }).join('') || '<div class="empty-state">Tiada notifikasi.</div>');
