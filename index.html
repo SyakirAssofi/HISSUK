@@ -809,6 +809,10 @@ var LEVELS = ["Belum Bermula","Iqra 1","Iqra 2","Iqra 3","Iqra 4","Iqra 5","Iqra
 var SURAH = ["Al-Baqarah","Ali-Imran","An-Nisa'","Al-Maidah","Al-An'am","Al-A'raf","Yasin","Al-Mulk"];
 
 function uid(prefix){ return prefix + '_' + Math.random().toString(36).slice(2,9); }
+function pushNotification(text){
+  appState.notifications.unshift({id:uid('n'), text:text, time:'Baru sahaja', read:false});
+  if(appState.notifications.length>50) appState.notifications = appState.notifications.slice(0,50);
+}
 function todayISO(){ return new Date().toISOString().slice(0,10); }
 function fmtDate(iso){ if(!iso) return '-'; var d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('ms-MY',{day:'2-digit',month:'short',year:'numeric'}); }
 function initials(name){ return name.split(' ').filter(function(w){return w.length>1||/^[A-Za-z]$/.test(w);}).slice(0,2).map(function(w){return w[0];}).join('').toUpperCase(); }
@@ -1256,6 +1260,9 @@ function renderAdmin(section){
   closeMobileSidebar('admin');
   document.getElementById('adminName').textContent = 'Admin';
   document.getElementById('adminDateNow').textContent = new Date().toLocaleDateString('ms-MY',{weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  var unreadN = appState.notifications.filter(function(n){return !n.read;}).length;
+  var badgeEl = document.getElementById('notifCount');
+  if(badgeEl){ badgeEl.textContent = unreadN; badgeEl.style.display = unreadN>0 ? 'flex' : 'none'; }
   var t = ADMIN_TITLES[section] || ADMIN_TITLES.dashboard;
   document.getElementById('adminPageTitle').textContent = t[0];
   document.getElementById('adminPageSub').textContent = t[1];
@@ -1440,6 +1447,7 @@ function viewStudentProfile(id){
 }
 
 /* ---- Admin: Teachers ---- */
+var HARI_LIST = ["Isnin","Selasa","Rabu","Khamis","Jumaat","Sabtu","Ahad"];
 function renderAdminTeachers(c){
   c.innerHTML = '<div class="toolbar"><div></div><button class="btn btn-primary" onclick="openTeacherForm()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Tambah Guru</button></div><div class="grid-3" id="teacherGrid"></div>';
   var grid = document.getElementById('teacherGrid');
@@ -1447,25 +1455,41 @@ function renderAdminTeachers(c){
   grid.innerHTML = appState.teachers.map(function(t){
     var clsNames = appState.classes.filter(function(c){return c.teacherId===t.id;}).map(function(c){return c.name;});
     var studentCount = studentsOfTeacher(t.id).length;
+    var days = t.days || [];
+    var bankInfo = t.bankName ? (t.bankName+' - '+(t.bankAccount||'-')) : '-';
     return '<div class="card card-pad"><div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
       '<div style="display:flex;gap:12px;align-items:center;"><div class="avatar" style="background:var(--emerald);width:44px;height:44px;">'+initials(t.name)+'</div><div><div style="font-weight:700;">'+t.name+'</div><div style="font-size:12.5px;color:var(--muted);">'+t.email+'</div></div></div>'+statusBadge(t.status)+
       '</div><div style="margin:16px 0;font-size:13px;color:var(--muted);">Kelas: '+(clsNames.join(', ')||'-')+'</div>'+
+      '<div style="margin-bottom:10px;font-size:13px;color:var(--muted);">Hari Mengajar: '+(days.length? days.map(function(d){return '<span class="badge badge-green" style="margin-right:4px;">'+d+'</span>';}).join('') : '<span style="color:var(--muted);">Belum ditetapkan</span>')+'</div>'+
+      '<div style="margin-bottom:14px;font-size:13px;color:var(--muted);">Akaun Bank: '+bankInfo+'</div>'+
       '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:14px;"><span>Jumlah Pelajar</span><strong>'+studentCount+'</strong></div>'+
       '<div class="row-actions"><button class="btn btn-outline btn-sm btn-block" onclick="openTeacherForm(\''+t.id+'\')">Sunting</button><button class="btn btn-ghost btn-sm" onclick="sendWhatsApp(\''+t.phone+'\',\'Assalamualaikum Ustaz/Ustazah, mesyuarat guru akan diadakan tidak lama lagi.\')">'+iconSvg('whatsapp')+'</button></div></div>';
   }).join('');
 }
 function openTeacherForm(id){
   var t = id? teacherById(id): null;
+  var tDays = (t && t.days) || [];
+  var dayChecks = HARI_LIST.map(function(d){
+    var checked = tDays.indexOf(d)!==-1 ? 'checked' : '';
+    return '<label style="display:inline-flex;align-items:center;gap:6px;margin:0 12px 8px 0;font-size:13px;font-weight:500;"><input type="checkbox" class="tDayCheck" value="'+d+'" '+checked+' style="width:auto;">'+d+'</label>';
+  }).join('');
   var body =
   '<div class="field"><label>Nama Penuh</label><input type="text" id="tFullName" value="'+(t?t.name:'')+'"></div>'+
   '<div class="input-row"><div class="field"><label>Email</label><input type="email" id="tEmail" value="'+(t?t.email:'')+'"></div><div class="field"><label>No. Telefon</label><input type="tel" id="tPhone" value="'+(t?t.phone:'')+'"></div></div>'+
-  '<div class="field"><label>Status</label><select id="tStatus"><option '+(t&&t.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(t&&t.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>';
+  '<div class="field"><label>Status</label><select id="tStatus"><option '+(t&&t.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(t&&t.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>'+
+  '<div class="field"><label>Hari Mengajar</label><div>'+dayChecks+'</div><span class="hint">Pilih hari-hari guru ini mengajar untuk susun jadual.</span></div>'+
+  '<div class="input-row"><div class="field"><label>Nama Bank</label><input type="text" id="tBankName" value="'+(t&&t.bankName?t.bankName:'')+'" placeholder="Contoh: Maybank"></div><div class="field"><label>No. Akaun Bank</label><input type="text" id="tBankAccount" value="'+(t&&t.bankAccount?t.bankAccount:'')+'" placeholder="Contoh: 1234567890"></div></div>';
   openModal(t?'Sunting Guru':'Tambah Guru', body, '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveTeacherForm('+(t?"'"+t.id+"'":'null')+')">Simpan</button>');
 }
 function saveTeacherForm(id){
   var name = document.getElementById('tFullName').value.trim();
   if(!name){ toast('Nama guru diperlukan.','error'); return; }
-  var data = {name:name, email:document.getElementById('tEmail').value.trim(), phone:document.getElementById('tPhone').value.trim(), status:document.getElementById('tStatus').value};
+  var checkedDays = [];
+  document.querySelectorAll('.tDayCheck:checked').forEach(function(el){ checkedDays.push(el.value); });
+  var data = {
+    name:name, email:document.getElementById('tEmail').value.trim(), phone:document.getElementById('tPhone').value.trim(), status:document.getElementById('tStatus').value,
+    days: checkedDays, bankName: document.getElementById('tBankName').value.trim(), bankAccount: document.getElementById('tBankAccount').value.trim()
+  };
   if(id){ var t = teacherById(id); for(var k in data){ t[k]=data[k]; } toast('Maklumat guru dikemaskini.'); }
   else { data.id = uid('t'); data.classes=[]; appState.teachers.push(data); toast('Guru baharu ditambah.'); }
   saveData(); closeModal(); renderAdminTeachers(document.getElementById('adminContent'));
@@ -1881,6 +1905,9 @@ function saveAttendance(){
     if(rec){ rec.status = rows[studentId].status; rec.note = rows[studentId].note; }
     else appState.attendance.push({id:uid('a'), date:date, classId:classId, studentId:studentId, status:rows[studentId].status, note:rows[studentId].note});
   });
+  var teacherObj = appState.currentUser ? teacherById(appState.currentUser.id) : null;
+  var clsObj = classById(classId);
+  pushNotification((teacherObj?teacherObj.name:'Seorang guru')+' telah merekod kehadiran kelas '+(clsObj?clsObj.name:'-')+' pada '+fmtDate(date)+'.');
   saveData();
   toast('Kehadiran berjaya disimpan!');
 }
@@ -1937,6 +1964,9 @@ function saveReadingRecord(studentId){
     note: document.getElementById('rNote').value.trim()
   };
   appState.readingRecords.unshift(rec);
+  var teacherObj2 = appState.currentUser ? teacherById(appState.currentUser.id) : null;
+  var stuObj = studentById(studentId);
+  pushNotification((teacherObj2?teacherObj2.name:'Seorang guru')+' telah merekod bacaan untuk '+(stuObj?stuObj.fullName:'seorang pelajar')+'.');
   saveData();
   toast('Rekod bacaan berjaya disimpan!');
   renderReadingFormFor(studentId);
@@ -2124,6 +2154,7 @@ function handleRegistration(e){
     level: document.getElementById('regTahap').value, classPreference: kelas, notes: document.getElementById('regCatatan').value.trim(),
     status:'Pending', submittedAt: todayISO()
   });
+  pushNotification('Pendaftaran baru daripada '+namaPenjaga+' untuk anak '+namaAnak+' menunggu semakan.');
   saveData();
   document.getElementById('regForm').reset();
   openModal('Permohonan Dihantar!',
