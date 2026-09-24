@@ -810,6 +810,7 @@ var SURAH = ["Al-Baqarah","Ali-Imran","An-Nisa'","Al-Maidah","Al-An'am","Al-A'ra
 
 function uid(prefix){ return prefix + '_' + Math.random().toString(36).slice(2,9); }
 function pushNotification(text){
+  if(!appState.notifications) appState.notifications = [];
   appState.notifications.unshift({id:uid('n'), text:text, time:'Baru sahaja', read:false});
   if(appState.notifications.length>50) appState.notifications = appState.notifications.slice(0,50);
 }
@@ -907,6 +908,23 @@ function generateSeedData(){
   return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests};
 }
 
+// Pastikan semua ruangan (array) wujud dalam appState, tak kira dari mana data datang
+// (data lama dari Firestore/localStorage sebelum sesuatu ciri wujud mungkin tiada ruangan ni).
+// Fungsi ni WAJIB dipanggil setiap kali appState digantikan sepenuhnya.
+function ensureStateDefaults(state){
+  if(!state.students) state.students = [];
+  if(!state.teachers) state.teachers = [];
+  if(!state.classes) state.classes = [];
+  if(!state.attendance) state.attendance = [];
+  if(!state.readingRecords) state.readingRecords = [];
+  if(!state.feePayments) state.feePayments = [];
+  if(!state.registrations) state.registrations = [];
+  if(!state.announcements) state.announcements = [];
+  if(!state.notifications) state.notifications = [];
+  if(!state.leaveRequests) state.leaveRequests = [];
+  return state;
+}
+
 function loadLocalData(){
   var raw = localStorage.getItem('emengaji_data');
   if(raw){
@@ -914,6 +932,7 @@ function loadLocalData(){
   } else {
     appState = generateSeedData();
   }
+  ensureStateDefaults(appState);
 }
 
 async function loadData(){
@@ -923,6 +942,7 @@ async function loadData(){
       var snap = await docRef.get();
       if(snap.exists){
         appState = snap.data();
+        ensureStateDefaults(appState);
       } else {
         appState = generateSeedData();
         await docRef.set(appState);
@@ -933,6 +953,7 @@ async function loadData(){
         if(liveSnap.exists && liveSnap.metadata.hasPendingWrites === false){
           var cu = appState.currentUser;
           appState = liveSnap.data();
+          ensureStateDefaults(appState);
           appState.currentUser = cu;
           if(appState.currentUser){ router(); }
         }
@@ -944,9 +965,7 @@ async function loadData(){
   } else {
     loadLocalData();
   }
-  if(!appState.announcements) appState.announcements = [];
-  if(!appState.notifications) appState.notifications = [];
-  if(!appState.leaveRequests) appState.leaveRequests = [];
+  ensureStateDefaults(appState);
   var savedUser = sessionStorage.getItem('emengaji_user');
   appState.currentUser = savedUser? JSON.parse(savedUser): null;
 }
@@ -2078,6 +2097,7 @@ function submitLeaveRequest(teacherId, teacherName){
     if(!dateFrom || !dateTo || !reason){ toast('Sila lengkapkan semua ruangan.', 'error'); return; }
     if(dateTo < dateFrom){ toast('Tarikh akhir mesti selepas atau sama dengan tarikh mula.', 'error'); return; }
 
+    if(!appState.leaveRequests) appState.leaveRequests = [];
     appState.leaveRequests.unshift({id:uid('lv'), teacherId:teacherId, teacherName:teacherName, dateFrom:dateFrom, dateTo:dateTo, reason:reason, status:'Pending', submittedAt:todayISO()});
     pushNotification(teacherName+' memohon cuti dari '+fmtDate(dateFrom)+' hingga '+fmtDate(dateTo)+' (sebab: '+reason+').');
 
