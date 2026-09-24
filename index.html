@@ -908,20 +908,14 @@ function generateSeedData(){
   return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests};
 }
 
-// Pastikan semua ruangan (array) wujud dalam appState, tak kira dari mana data datang
-// (data lama dari Firestore/localStorage sebelum sesuatu ciri wujud mungkin tiada ruangan ni).
-// Fungsi ni WAJIB dipanggil setiap kali appState digantikan sepenuhnya.
+// SENARAI INDUK semua kategori data yang perlu disimpan/disync.
+// PENTING: bila tambah ciri baharu yang perlukan array data baharu dalam appState,
+// TAMBAH nama ruangan itu di sini SAHAJA - ensureStateDefaults() dan saveData()
+// akan automatik ambil kira, tak perlu edit tempat lain (elak bug macam leaveRequests dulu).
+var PERSISTED_STATE_KEYS = ['students','teachers','classes','attendance','readingRecords','feePayments','registrations','announcements','notifications','leaveRequests'];
+
 function ensureStateDefaults(state){
-  if(!state.students) state.students = [];
-  if(!state.teachers) state.teachers = [];
-  if(!state.classes) state.classes = [];
-  if(!state.attendance) state.attendance = [];
-  if(!state.readingRecords) state.readingRecords = [];
-  if(!state.feePayments) state.feePayments = [];
-  if(!state.registrations) state.registrations = [];
-  if(!state.announcements) state.announcements = [];
-  if(!state.notifications) state.notifications = [];
-  if(!state.leaveRequests) state.leaveRequests = [];
+  PERSISTED_STATE_KEYS.forEach(function(k){ if(!state[k]) state[k] = []; });
   return state;
 }
 
@@ -971,11 +965,8 @@ async function loadData(){
 }
 
 async function saveData(){
-  var toSave = {
-    students: appState.students, teachers: appState.teachers, classes: appState.classes,
-    attendance: appState.attendance, readingRecords: appState.readingRecords, feePayments: appState.feePayments,
-    registrations: appState.registrations, notifications: appState.notifications, announcements: appState.announcements
-  };
+  var toSave = {};
+  PERSISTED_STATE_KEYS.forEach(function(k){ toSave[k] = appState[k]; });
   localStorage.setItem('emengaji_data', JSON.stringify(toSave));
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
     try{
