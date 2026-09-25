@@ -703,7 +703,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
       <div class="teacher-topbar-row">
         <div class="brand"><span class="brand-mark" style="width:30px;height:30px;"></span></div>
         <div style="display:flex;gap:8px;">
-          <button class="icon-btn" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);color:#fff;" onclick="go('/teacher/notifikasi')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
+          <button class="icon-btn" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);color:#fff;" onclick="go('/teacher/notifikasi')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span class="dot-badge" id="teacherNotifCount" style="display:none;"></span></button>
           <button class="icon-btn" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);color:#fff;" onclick="logout()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
         </div>
       </div>
@@ -741,6 +741,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
           <div><h1 id="parentPageTitle">Dashboard</h1><div class="sub" id="parentPageSub"></div></div>
         </div>
         <div class="topbar-right">
+          <button class="icon-btn" onclick="go('/parent/notifikasi')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="dot-badge" id="parentNotifCount" style="display:none;"></span></button>
           <div class="child-switch" id="childSwitchWrap"></div>
         </div>
       </header>
@@ -838,7 +839,7 @@ function generateSeedData(){
       guardianPhone: '01'+(30000000+i*777777),
       classId: cls.id, teacherId: cls.teacherId, level: level,
       startDate:'2025-01-10', status: i===27? 'Tidak Aktif':'Aktif',
-      avatarColor: ['#047857','#c9a227','#0f766e','#b45309'][i%4]
+      avatarColor: ['#047857','#c9a227','#0f766e','#b45309'][i%4], monthlyFee: 60
     };
   });
   // ensure demo parent (Nurul Huda) has at least one clearly linked child
@@ -905,17 +906,29 @@ function generateSeedData(){
 
   var leaveRequests = [];
 
-  return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests};
+  return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests, settings: Object.assign({}, DEFAULT_SETTINGS)};
 }
 
-// SENARAI INDUK semua kategori data yang perlu disimpan/disync.
+// SENARAI INDUK semua kategori data ARRAY yang perlu disimpan/disync.
 // PENTING: bila tambah ciri baharu yang perlukan array data baharu dalam appState,
 // TAMBAH nama ruangan itu di sini SAHAJA - ensureStateDefaults() dan saveData()
 // akan automatik ambil kira, tak perlu edit tempat lain (elak bug macam leaveRequests dulu).
 var PERSISTED_STATE_KEYS = ['students','teachers','classes','attendance','readingRecords','feePayments','registrations','announcements','notifications','leaveRequests'];
 
+// Nilai lalai untuk tetapan sistem (bukan array) - appState.settings
+var DEFAULT_SETTINGS = {
+  centerName: 'Pusat Pengajian Al-Quran E-Mengaji',
+  defaultFee: 60,
+  bankName: 'Maybank',
+  bankAccountNumber: '',
+  bankAccountHolder: 'Pusat Pengajian Al-Quran E-Mengaji',
+  whatsappReceiptNumber: '0173311580'
+};
+
 function ensureStateDefaults(state){
   PERSISTED_STATE_KEYS.forEach(function(k){ if(!state[k]) state[k] = []; });
+  if(!state.settings) state.settings = {};
+  for(var k in DEFAULT_SETTINGS){ if(state.settings[k]===undefined || state.settings[k]===null){ state.settings[k] = DEFAULT_SETTINGS[k]; } }
   return state;
 }
 
@@ -967,6 +980,7 @@ async function loadData(){
 async function saveData(){
   var toSave = {};
   PERSISTED_STATE_KEYS.forEach(function(k){ toSave[k] = appState[k]; });
+  toSave.settings = appState.settings;
   localStorage.setItem('emengaji_data', JSON.stringify(toSave));
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
     try{
@@ -1422,27 +1436,44 @@ function openStudentForm(id){
   var s = id? studentById(id) : null;
   var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'" '+(s&&s.classId===cl.id?'selected':'')+'>'+cl.name+'</option>'; }).join('');
   var levelOpts = LEVELS.map(function(l){ return '<option '+(s&&s.level===l?'selected':'')+'>'+l+'</option>'; }).join('');
+  var defaultFee = (appState.settings && appState.settings.defaultFee) || 60;
   var body =
   '<div class="input-row"><div class="field"><label>Nama Penuh</label><input type="text" id="fFullName" value="'+(s?s.fullName:'')+'"></div><div class="field"><label>Nama Panggilan</label><input type="text" id="fNickname" value="'+(s?s.nickname:'')+'"></div></div>'+
   '<div class="input-row"><div class="field"><label>Tarikh Lahir</label><input type="date" id="fDob" value="'+(s?s.dob:'')+'"></div><div class="field"><label>Tarikh Mula</label><input type="date" id="fStartDate" value="'+(s?s.startDate:todayISO())+'"></div></div>'+
   '<div class="input-row"><div class="field"><label>Nama Penjaga</label><input type="text" id="fGuardianName" value="'+(s?s.guardianName:'')+'"></div><div class="field"><label>Nombor Telefon Penjaga</label><input type="tel" id="fGuardianPhone" value="'+(s?s.guardianPhone:'')+'"></div></div>'+
   '<div class="input-row"><div class="field"><label>Kelas</label><select id="fClassId">'+classOpts+'</select></div><div class="field"><label>Tahap Mengaji</label><select id="fLevel">'+levelOpts+'</select></div></div>'+
-  '<div class="field"><label>Status</label><select id="fStatus"><option '+(s&&s.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(s&&s.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>';
+  '<div class="input-row"><div class="field"><label>Status</label><select id="fStatus"><option '+(s&&s.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(s&&s.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>'+
+  '<div class="field"><label>Yuran Bulanan (RM)</label><input type="number" id="fMonthlyFee" value="'+(s&&s.monthlyFee!=null?s.monthlyFee:defaultFee)+'" min="0" step="1"><span class="hint">Bulan semasa akan dikemaskini automatik untuk ibu bapa bila disimpan.</span></div></div>';
   openModal(s?'Sunting Pelajar':'Tambah Pelajar Baharu', body,
     '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveStudentForm('+(s?"'"+s.id+"'":'null')+')">Simpan</button>', true);
+}
+function upsertCurrentMonthFee(studentId, amount){
+  var month = new Date().toISOString().slice(0,7);
+  var rec = appState.feePayments.filter(function(f){return f.studentId===studentId && f.month===month;})[0];
+  if(rec){
+    if(rec.status==='Pending'){ rec.amount = amount; }
+    // kalau sudah 'Paid', tak diubah - elak menconflict rekod bayaran yang sudah selesai
+  } else {
+    appState.feePayments.push({id:uid('f'), studentId:studentId, month:month, amount:amount, status:'Pending', paidDate:''});
+  }
 }
 function saveStudentForm(id){
   var fullName = document.getElementById('fFullName').value.trim();
   if(!fullName){ toast('Nama penuh diperlukan.', 'error'); return; }
   var classId = document.getElementById('fClassId').value;
+  var monthlyFee = parseFloat(document.getElementById('fMonthlyFee').value) || 0;
   var data = {
     fullName: fullName, nickname: document.getElementById('fNickname').value.trim() || fullName.split(' ')[0],
     dob: document.getElementById('fDob').value, startDate: document.getElementById('fStartDate').value,
     guardianName: document.getElementById('fGuardianName').value.trim(), guardianPhone: document.getElementById('fGuardianPhone').value.trim(),
-    classId: classId, teacherId: classById(classId)?classById(classId).teacherId:null, level: document.getElementById('fLevel').value, status: document.getElementById('fStatus').value
+    classId: classId, teacherId: classById(classId)?classById(classId).teacherId:null, level: document.getElementById('fLevel').value, status: document.getElementById('fStatus').value,
+    monthlyFee: monthlyFee
   };
+  var studentIdToUse = id;
   if(id){ var s = studentById(id); for(var k in data){ s[k]=data[k]; } toast('Maklumat pelajar dikemaskini.'); }
-  else { data.id = uid('s'); data.avatarColor = ['#047857','#c9a227','#0f766e','#b45309'][appState.students.length%4]; appState.students.push(data); toast('Pelajar baharu berjaya ditambah.'); }
+  else { data.id = uid('s'); studentIdToUse = data.id; data.avatarColor = ['#047857','#c9a227','#0f766e','#b45309'][appState.students.length%4]; appState.students.push(data); toast('Pelajar baharu berjaya ditambah.'); }
+  upsertCurrentMonthFee(studentIdToUse, monthlyFee);
+  pushNotification('Yuran bulanan '+fullName+' ditetapkan kepada RM'+monthlyFee+'.');
   saveData(); closeModal(); renderStudentTable();
 }
 function deleteStudentConfirm(id){
@@ -1919,15 +1950,40 @@ function deleteAnnouncement(id){
 }
 
 /* ---- Admin: Settings ---- */
+function confirmResetDemoData(){
+  confirmAction('Reset semua data demo? Semua perubahan akan hilang.', resetDemoData);
+}
 function renderAdminSettings(c){
+  var s = appState.settings || {};
   c.innerHTML =
-  '<div class="card card-pad" style="max-width:640px;">'+
-  '<div class="settings-row"><div><div class="lbl">Nama Pusat Mengaji</div><div class="desc">Dipaparkan pada laporan dan e-mel</div></div><input type="text" value="Pusat Pengajian Al-Quran E-Mengaji" style="max-width:240px;"></div>'+
-  '<div class="settings-row"><div><div class="lbl">Kadar Yuran Bulanan (RM)</div><div class="desc">Digunakan sebagai lalai untuk pelajar baharu</div></div><input type="number" value="60" style="max-width:120px;"></div>'+
-  '<div class="settings-row"><div><div class="lbl">Notifikasi WhatsApp Automatik</div><div class="desc">Hantar peringatan kehadiran &amp; yuran</div></div><label class="switch"><input type="checkbox" checked><span class="slider-tog"></span></label></div>'+
-  '<div class="settings-row"><div><div class="lbl">Mod Gelap</div><div class="desc">Akan datang pada kemas kini seterusnya</div></div><label class="switch"><input type="checkbox" disabled><span class="slider-tog"></span></label></div>'+
-  '<div class="settings-row"><div><div class="lbl">Reset Data Demo</div><div class="desc">Kembalikan semua data kepada tetapan asal</div></div><button class="btn btn-danger btn-sm" onclick="confirmAction(\'Reset semua data demo? Semua perubahan akan hilang.\', resetDemoData)">Reset Data</button></div>'+
-  '</div><p class="helper-note" style="max-width:640px;margin-top:18px;">Nota: Tetapan ini adalah simulasi antara muka sahaja dalam prototype dan belum disambungkan ke pangkalan data sebenar.</p>';
+  '<div class="card card-pad" style="max-width:640px;margin-bottom:20px;">' +
+  '<h3 style="font-size:15.5px;margin-bottom:14px;">Maklumat Am & Yuran</h3>' +
+  '<div class="field"><label>Nama Pusat Mengaji</label><input type="text" id="setCenterName" value="' + (s.centerName||'') + '"></div>' +
+  '<div class="field"><label>Kadar Yuran Bulanan Lalai (RM)</label><input type="number" id="setDefaultFee" value="' + (s.defaultFee!=null?s.defaultFee:60) + '" min="0"><span class="hint">Digunakan sebagai cadangan bila tambah pelajar baharu. Setiap pelajar boleh ditetapkan yuran berbeza dalam Sunting Pelajar.</span></div>' +
+  '</div>' +
+  '<div class="card card-pad" style="max-width:640px;margin-bottom:20px;">' +
+  '<h3 style="font-size:15.5px;margin-bottom:14px;">Maklumat Akaun Bank (untuk paparan kepada ibu bapa)</h3>' +
+  '<div class="input-row"><div class="field"><label>Nama Bank</label><input type="text" id="setBankName" value="' + (s.bankName||'') + '" placeholder="Contoh: Maybank"></div><div class="field"><label>Nombor Akaun</label><input type="text" id="setBankAccountNumber" value="' + (s.bankAccountNumber||'') + '" placeholder="Contoh: 1234567890"></div></div>' +
+  '<div class="field"><label>Nama Pemegang Akaun</label><input type="text" id="setBankAccountHolder" value="' + (s.bankAccountHolder||'') + '"></div>' +
+  '<div class="field"><label>Nombor WhatsApp Terima Resit</label><input type="tel" id="setWaReceipt" value="' + (s.whatsappReceiptNumber||'') + '" placeholder="Contoh: 0173311580"><span class="hint">Ibu bapa akan hantar resit bayaran ke nombor ini melalui butang di halaman Yuran mereka.</span></div>' +
+  '<button class="btn btn-primary" onclick="saveAdminSettings()">Simpan Tetapan</button>' +
+  '</div>' +
+  '<div class="card card-pad" style="max-width:640px;">' +
+  '<div class="settings-row"><div><div class="lbl">Notifikasi WhatsApp Automatik</div><div class="desc">Hantar peringatan kehadiran &amp; yuran</div></div><label class="switch"><input type="checkbox" checked><span class="slider-tog"></span></label></div>' +
+  '<div class="settings-row"><div><div class="lbl">Mod Gelap</div><div class="desc">Akan datang pada kemas kini seterusnya</div></div><label class="switch"><input type="checkbox" disabled><span class="slider-tog"></span></label></div>' +
+  '<div class="settings-row"><div><div class="lbl">Reset Data Demo</div><div class="desc">Kembalikan semua data kepada tetapan asal</div></div><button class="btn btn-danger btn-sm" onclick="confirmResetDemoData()">Reset Data</button></div>' +
+  '</div>';
+}
+function saveAdminSettings(){
+  if(!appState.settings) appState.settings = {};
+  appState.settings.centerName = document.getElementById('setCenterName').value.trim();
+  appState.settings.defaultFee = parseFloat(document.getElementById('setDefaultFee').value) || 60;
+  appState.settings.bankName = document.getElementById('setBankName').value.trim();
+  appState.settings.bankAccountNumber = document.getElementById('setBankAccountNumber').value.trim();
+  appState.settings.bankAccountHolder = document.getElementById('setBankAccountHolder').value.trim();
+  appState.settings.whatsappReceiptNumber = document.getElementById('setWaReceipt').value.trim();
+  saveData();
+  toast('Tetapan berjaya disimpan.');
 }
 
 /* =========================================================
@@ -1945,11 +2001,44 @@ function renderTeacherBottomNav(active){
 }
 var teacherAttState = {classId:null, date: todayISO(), rows:{}, _loadedDate:null};
 
+/* ---- Sistem badge notifikasi (pengumuman) untuk Guru & Ibu Bapa ---- */
+function getRelevantAnnouncementsForRole(role){
+  return appState.announcements.filter(function(a){
+    if(role==='guru'){
+      if(a.sentToGuru===true) return true;
+      if(a.sentToGuru===undefined && a.audience && (a.audience==='Semua'||a.audience==='Guru')) return true;
+    } else if(role==='parent'){
+      if(a.sentToParent===true) return true;
+      if(a.sentToParent===undefined && a.audience && (a.audience==='Semua'||a.audience==='Ibu Bapa')) return true;
+    }
+    return false;
+  });
+}
+function getSeenAnnouncementIds(userId){
+  try{ return JSON.parse(localStorage.getItem('emengaji_seen_ann_'+userId) || '[]'); }catch(e){ return []; }
+}
+function markAnnouncementsSeen(userId, ids){
+  var seen = getSeenAnnouncementIds(userId);
+  ids.forEach(function(id){ if(seen.indexOf(id)===-1) seen.push(id); });
+  localStorage.setItem('emengaji_seen_ann_'+userId, JSON.stringify(seen));
+}
+function updateNotifBadge(elId, role){
+  var user = appState.currentUser;
+  var badgeEl = document.getElementById(elId);
+  if(!user || !badgeEl) return;
+  var relevant = getRelevantAnnouncementsForRole(role);
+  var seen = getSeenAnnouncementIds(user.id);
+  var unread = relevant.filter(function(a){ return seen.indexOf(a.id)===-1; }).length;
+  badgeEl.textContent = unread;
+  badgeEl.style.display = unread>0 ? 'flex' : 'none';
+}
+
 function renderTeacher(section){
   var user = appState.currentUser;
   var teacher = appState.teachers.filter(function(t){return t.id===user.id;})[0] || appState.teachers[0];
   document.getElementById('teacherName').textContent = teacher.name;
   document.getElementById('teacherAvatar').textContent = initials(teacher.name);
+  updateNotifBadge('teacherNotifCount', 'guru');
   var known = ['dashboard','kelas','kehadiran','bacaan','profil'];
   renderTeacherBottomNav(known.indexOf(section)!==-1? section : 'dashboard');
   var c = document.getElementById('teacherContent');
@@ -2165,16 +2254,16 @@ function submitLeaveRequest(teacherId, teacherName){
   }
 }
 function renderTeacherNotif(c){
-  var sentAnnouncements = appState.announcements.filter(function(a){
-    if(a.sentToGuru===true) return true;
-    if(a.sentToGuru===undefined && a.audience && (a.audience==='Semua'||a.audience==='Guru')) return true;
-    return false;
-  });
+  var sentAnnouncements = getRelevantAnnouncementsForRole('guru');
   var annHtml = sentAnnouncements.length ? sentAnnouncements.map(function(a){
     var imageHtml = a.image ? '<img src="'+a.image+'" alt="Poster" style="width:100%;border-radius:10px;margin:8px 0;display:block;">' : '';
     return '<div class="today-card"><h3 style="font-size:15px;">'+a.title+'</h3><p style="font-size:11.5px;color:var(--muted);margin-top:2px;">'+fmtDate(a.date)+'</p>'+imageHtml+'<p style="font-size:13.5px;margin-top:8px;">'+a.body+'</p></div>';
   }).join('') : '<div class="empty-state">Tiada pengumuman.</div>';
   c.innerHTML = '<div class="t-section-title" style="margin-top:0;">Pengumuman</div>' + annHtml;
+  if(appState.currentUser){
+    markAnnouncementsSeen(appState.currentUser.id, sentAnnouncements.map(function(a){return a.id;}));
+    updateNotifBadge('teacherNotifCount', 'guru');
+  }
 }
 
 /* =========================================================
@@ -2207,6 +2296,7 @@ function getMyChildren(){
 function renderParent(section){
   buildSidebarNav('parent', PARENT_MENU, section);
   closeMobileSidebar('parent');
+  updateNotifBadge('parentNotifCount', 'parent');
   var children = getMyChildren();
   if(!selectedChildId || !children.filter(function(ch){return ch.id===selectedChildId;}).length) selectedChildId = children[0]? children[0].id : null;
   document.getElementById('parentName').textContent = appState.currentUser.name;
@@ -2301,21 +2391,42 @@ function renderParentReports(c){
 }
 function renderParentFees(c){
   var recs = appState.feePayments.filter(function(f){return f.studentId===selectedChildId;}).sort(function(a,b){return b.month.localeCompare(a.month);});
+  var s = appState.settings || {};
+  var student = studentById(selectedChildId);
+  var currentMonthRec = recs.filter(function(f){return f.month===new Date().toISOString().slice(0,7);})[0];
+  var bankBoxHtml =
+  '<div class="card card-pad" style="margin-bottom:20px;background:var(--emerald-light);border-color:var(--emerald-soft);">' +
+    '<h3 style="font-size:15px;margin-bottom:12px;">Maklumat Bayaran Yuran</h3>' +
+    '<div class="kv"><span>Bank</span><span><strong>' + (s.bankName||'-') + '</strong></span></div>' +
+    '<div class="kv"><span>Nombor Akaun</span><span><strong>' + (s.bankAccountNumber||'-') + '</strong></span></div>' +
+    '<div class="kv"><span>Nama Pemegang Akaun</span><span><strong>' + (s.bankAccountHolder||'-') + '</strong></span></div>' +
+    '<button class="btn btn-primary btn-block" style="margin-top:14px;" onclick="sendFeeReceiptWhatsApp()">' + iconSvg('whatsapp') + ' Hantar Resit Bayaran via WhatsApp</button>' +
+  '</div>';
   c.innerHTML =
+  bankBoxHtml +
   '<div class="card"><div class="table-wrap"><table><thead><tr><th>Bulan</th><th>Jumlah</th><th>Status</th><th>Tarikh Bayar</th></tr></thead><tbody>'+
   (recs.map(function(f){ return '<tr><td>'+f.month+'</td><td>RM'+f.amount+'</td><td>'+statusBadge(f.status)+'</td><td>'+(f.paidDate?fmtDate(f.paidDate):'-')+'</td></tr>'; }).join('') || emptyRow(4))+
-  '</tbody></table></div></div><p class="helper-note" style="margin-top:16px;max-width:520px;">Untuk sebarang pertanyaan mengenai bayaran, sila hubungi pihak admin pusat mengaji secara terus. Pembayaran dalam talian belum tersedia dalam prototype ini.</p>';
+  '</tbody></table></div></div><p class="helper-note" style="margin-top:16px;max-width:520px;">Sila buat pembayaran ke akaun bank di atas, kemudian hantar resit melalui WhatsApp untuk pengesahan oleh admin. Pembayaran dalam talian belum tersedia dalam prototype ini.</p>';
+}
+function sendFeeReceiptWhatsApp(){
+  var s = appState.settings || {};
+  var student = studentById(selectedChildId);
+  var recs = appState.feePayments.filter(function(f){return f.studentId===selectedChildId;});
+  var currentMonthRec = recs.filter(function(f){return f.month===new Date().toISOString().slice(0,7);})[0];
+  var amountText = currentMonthRec ? ('RM'+currentMonthRec.amount) : 'yuran bulanan';
+  var message = 'Assalamualaikum. Saya ingin hantar resit bayaran ' + amountText + ' bagi anak saya ' + (student?student.fullName:'-') + '. Sila semak lampiran resit yang akan saya hantar. Terima kasih.';
+  sendWhatsApp(s.whatsappReceiptNumber || '0173311580', message);
 }
 function renderParentNotif(c){
-  var list = appState.announcements.filter(function(a){
-    if(a.sentToParent===true) return true;
-    if(a.sentToParent===undefined && a.audience && (a.audience==='Semua'||a.audience==='Ibu Bapa')) return true;
-    return false;
-  });
+  var list = getRelevantAnnouncementsForRole('parent');
   c.innerHTML = '<div class="card">'+(list.map(function(a){
     var imageHtml = a.image ? '<img src="'+a.image+'" alt="Poster" style="width:100%;max-width:360px;border-radius:10px;margin:8px 0;display:block;">' : '';
     return '<div style="padding:16px 20px;border-bottom:1px solid var(--border);"><h4 style="font-size:14.5px;">'+a.title+'</h4><p style="font-size:12.5px;color:var(--muted);margin:4px 0 8px;">'+fmtDate(a.date)+'</p>'+imageHtml+'<p style="font-size:13.5px;">'+a.body+'</p></div>';
   }).join('') || '<div class="empty-state">Tiada notifikasi.</div>')+'</div>';
+  if(appState.currentUser){
+    markAnnouncementsSeen(appState.currentUser.id, list.map(function(a){return a.id;}));
+    updateNotifBadge('parentNotifCount', 'parent');
+  }
 }
 function renderParentProfile(c){
   var u = appState.currentUser;
