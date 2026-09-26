@@ -423,18 +423,6 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
 .child-dropdown button{width:100%;text-align:left;padding:9px 10px;border-radius:8px;background:none;border:none;font-size:13.5px;display:flex;align-items:center;gap:10px;}
 .child-dropdown button:hover{background:var(--background);}
 
-.mini-cal{width:100%;}
-.mini-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.mini-cal-head button{background:var(--background);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--emerald-darker);font-weight:700;}
-.mini-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
-.mini-cal-grid .dow{font-size:10.5px;color:var(--muted);font-weight:700;padding:4px 0;}
-.mini-cal-day{aspect-ratio:1;border-radius:8px;border:1px solid transparent;background:none;font-size:12.5px;font-weight:600;color:var(--text);}
-.mini-cal-day:hover:not(:disabled){background:var(--emerald-light);}
-.mini-cal-day:disabled{color:var(--border);cursor:not-allowed;}
-.mini-cal-day.cal-selected{background:var(--emerald);color:#fff;}
-.mini-cal-day.cal-today{border-color:var(--gold);}
-.att-date-popup{display:none;position:absolute;z-index:60;top:calc(100% + 6px);left:0;right:0;padding:14px;box-shadow:var(--shadow-lg);background:#fff;}
-
 .helper-note{background:var(--gold-light);border:1px dashed var(--gold);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#6b5716;margin-bottom:18px;}
 ::selection{background:var(--gold-light);}
 </style>
@@ -811,12 +799,12 @@ var appState = {
 var NAMES = ["Ahmad bin Ali","Aisyah binti Rahman","Yusuf bin Hassan","Fatimah binti Zain","Ali bin Hamzah","Siti Nur Aisyah","Muhammad Izzuddin","Nurul Iman","Amirul Hakim","Khadijah binti Salleh","Hafiz bin Zulkifli","Mariam binti Yusof","Danial bin Rosli","Nur Batrisyia","Zulkarnain bin Idris","Aina Sofea","Haziq bin Mahmud","Nur Alya","Adam bin Hakim","Sofea Damia","Iman Hakimi","Wan Nur Ain","Amir Danish","Puteri Nur Ain","Rayyan bin Zahid","Nur Ain Humaira","Faris bin Amran","Aleesya Putri","Zaid bin Fahmi","Nur Elya Batrisya"];
 var TEACHER_NAMES = ["Ustaz Ahmad","Ustazah Siti","Ustaz Zulkifli","Ustazah Nurul","Ustaz Faisal"];
 var CLASS_DEFS = [
-  {name:"Iqra' A", time:"8:00 - 9:00 malam", level:"Iqra' 1-3", days:["Isnin","Rabu"]},
-  {name:"Iqra' B", time:"9:00 - 10:00 malam", level:"Iqra' 4-6", days:["Selasa","Khamis"]},
-  {name:"Iqra' C", time:"10:00 - 11:00 pagi (Sabtu)", level:"Iqra' 1-3", days:["Sabtu"]},
-  {name:"Al-Quran A", time:"3:00 - 4:00 petang", level:"Al-Quran", days:["Ahad"]},
-  {name:"Al-Quran B", time:"4:00 - 5:00 petang", level:"Al-Quran", days:["Isnin","Rabu","Jumaat"]},
-  {name:"Tahsin", time:"8:30 - 9:30 malam", level:"Tajwid Lanjutan", days:["Khamis"]}
+  {name:"Iqra' A", time:"8:00 - 9:00 malam", level:"Iqra' 1-3"},
+  {name:"Iqra' B", time:"9:00 - 10:00 malam", level:"Iqra' 4-6"},
+  {name:"Iqra' C", time:"10:00 - 11:00 pagi (Sabtu)", level:"Iqra' 1-3"},
+  {name:"Al-Quran A", time:"3:00 - 4:00 petang", level:"Al-Quran"},
+  {name:"Al-Quran B", time:"4:00 - 5:00 petang", level:"Al-Quran"},
+  {name:"Tahsin", time:"8:30 - 9:30 malam", level:"Tajwid Lanjutan"}
 ];
 var LEVELS = ["Belum Bermula","Iqra 1","Iqra 2","Iqra 3","Iqra 4","Iqra 5","Iqra 6","Al-Quran"];
 var SURAH = ["Al-Baqarah","Ali-Imran","An-Nisa'","Al-Maidah","Al-An'am","Al-A'raf","Yasin","Al-Mulk"];
@@ -835,8 +823,8 @@ function esc(str){ return (str==null?'':String(str)).replace(/[&<>"']/g, functio
 
 /* ---------- SEED DATA ---------- */
 function generateSeedData(){
-  var teachers = TEACHER_NAMES.map(function(n,i){ return {id:'t'+(i+1), name:n, email:(i===0?'guru@emengaji.test':'ustaz'+(i+1)+'@emengaji.test'), phone:'01'+(20000000+i*1111111), classes:[], status:'Aktif', icNumber:'', position:'Guru Al-Quran', serviceStartDate:'2024-01-01', allowanceType:'Sesi', allowanceRate:30}; });
-  var classes = CLASS_DEFS.map(function(cdef,i){ return {id:'c'+(i+1), name:cdef.name, time:cdef.time, level:cdef.level, teacherId: teachers[i%teachers.length].id, capacity:20, days: cdef.days || []}; });
+  var teachers = TEACHER_NAMES.map(function(n,i){ return {id:'t'+(i+1), name:n, email:(i===0?'guru@emengaji.test':'ustaz'+(i+1)+'@emengaji.test'), phone:'01'+(20000000+i*1111111), classes:[], status:'Aktif'}; });
+  var classes = CLASS_DEFS.map(function(cdef,i){ return {id:'c'+(i+1), name:cdef.name, time:cdef.time, level:cdef.level, teacherId: teachers[i%teachers.length].id, capacity:20}; });
   classes.forEach(function(c){ var t = teachers.filter(function(x){return x.id===c.teacherId;})[0]; if(t) t.classes.push(c.id); });
   if(classes[0].teacherId !== 't1'){ classes[0].teacherId='t1'; teachers[0].classes.push('c1'); }
 
@@ -918,14 +906,14 @@ function generateSeedData(){
 
   var leaveRequests = [];
 
-  return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests, payslips:[], settings: Object.assign({}, DEFAULT_SETTINGS)};
+  return {currentUser:null, students:students, teachers:teachers, classes:classes, attendance:attendance, readingRecords:readingRecords, feePayments:feePayments, registrations:registrations, announcements:announcements, notifications:notifications, leaveRequests:leaveRequests, settings: Object.assign({}, DEFAULT_SETTINGS)};
 }
 
 // SENARAI INDUK semua kategori data ARRAY yang perlu disimpan/disync.
 // PENTING: bila tambah ciri baharu yang perlukan array data baharu dalam appState,
 // TAMBAH nama ruangan itu di sini SAHAJA - ensureStateDefaults() dan saveData()
 // akan automatik ambil kira, tak perlu edit tempat lain (elak bug macam leaveRequests dulu).
-var PERSISTED_STATE_KEYS = ['students','teachers','classes','attendance','readingRecords','feePayments','registrations','announcements','notifications','leaveRequests','payslips'];
+var PERSISTED_STATE_KEYS = ['students','teachers','classes','attendance','readingRecords','feePayments','registrations','announcements','notifications','leaveRequests'];
 
 // Nilai lalai untuk tetapan sistem (bukan array) - appState.settings
 var DEFAULT_SETTINGS = {
@@ -1252,8 +1240,7 @@ function iconSvg(name){
     check:'<path d="m20 6-11 11-5-5"/>',
     whatsapp:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/>',
     leave:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9.5 14.5 5 5M14.5 14.5l-5 5"/>',
-    alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
-    payslip:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/><circle cx="17" cy="17" r="3" fill="none"/>'
+    alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
   };
   return '<svg class="icon" viewBox="0 0 24 24">'+(icons[name]||icons.dashboard)+'</svg>';
 }
@@ -1278,7 +1265,6 @@ var ADMIN_MENU = [
   {key:'kehadiran', label:'Kehadiran', icon:'attendance'},
   {key:'bacaan', label:'Rekod Bacaan', icon:'reading'},
   {key:'yuran', label:'Yuran', icon:'fees'},
-  {key:'elaun', label:'Elaun Guru', icon:'payslip'},
   {key:'laporan', label:'Laporan', icon:'reports'},
   {key:'notifikasi', label:'Notifikasi', icon:'notif'},
   {key:'pengumuman', label:'Pengumuman', icon:'announce'},
@@ -1295,7 +1281,6 @@ var ADMIN_TITLES = {
   guru:['Pengurusan Guru','Urus maklumat dan penugasan guru'], kelas:['Pengurusan Kelas','Urus kelas dan jadual'],
   pendaftaran:['Pendaftaran Online','Semak dan luluskan permohonan baru'], cuti:['Permohonan Cuti Guru','Semak permohonan cuti dan cari pengganti'], kehadiran:['Rekod Kehadiran','Lihat kehadiran mengikut kelas dan tarikh'],
   bacaan:['Rekod Bacaan','Pantau kemajuan bacaan semua pelajar'], yuran:['Pengurusan Yuran','Jejak kutipan dan tunggakan yuran'],
-  elaun:['Elaun Guru','Jana dan terbitkan slip elaun bulanan'],
   laporan:['Laporan','Jana laporan bulanan pelajar'], notifikasi:['Notifikasi','Kemaskini terkini sistem'],
   pengumuman:['Pengumuman','Urus pengumuman untuk guru dan ibu bapa'], tetapan:['Tetapan Sistem','Konfigurasi am sistem E-Mengaji']
 };
@@ -1315,7 +1300,7 @@ function renderAdmin(section){
   var renderers = {
     dashboard: renderAdminDashboard, pelajar: renderAdminStudents, guru: renderAdminTeachers,
     kelas: renderAdminClasses, pendaftaran: renderAdminRegistrations, cuti: renderAdminLeave, kehadiran: renderAdminAttendance,
-    bacaan: renderAdminReading, yuran: renderAdminFees, elaun: renderAdminPayslips, laporan: renderAdminReports,
+    bacaan: renderAdminReading, yuran: renderAdminFees, laporan: renderAdminReports,
     notifikasi: renderAdminNotifications, pengumuman: renderAdminAnnouncements, tetapan: renderAdminSettings
   };
   (renderers[section] || renderAdminDashboard)(c);
@@ -1550,15 +1535,12 @@ function openTeacherForm(id){
     var checked = tDays.indexOf(d)!==-1 ? 'checked' : '';
     return '<label style="display:inline-flex;align-items:center;gap:6px;margin:0 12px 8px 0;font-size:13px;font-weight:500;"><input type="checkbox" class="tDayCheck" value="'+d+'" '+checked+' style="width:auto;">'+d+'</label>';
   }).join('');
-  var allowanceType = (t && t.allowanceType) || 'Sesi';
   var body =
   '<div class="field"><label>Nama Penuh</label><input type="text" id="tFullName" value="'+(t?t.name:'')+'"></div>'+
   '<div class="input-row"><div class="field"><label>Email</label><input type="email" id="tEmail" value="'+(t?t.email:'')+'"></div><div class="field"><label>No. Telefon</label><input type="tel" id="tPhone" value="'+(t?t.phone:'')+'"></div></div>'+
-  '<div class="input-row"><div class="field"><label>No. Kad Pengenalan</label><input type="text" id="tIcNumber" value="'+(t&&t.icNumber?t.icNumber:'')+'" placeholder="Contoh: 900101-14-5566"></div><div class="field"><label>Jawatan</label><input type="text" id="tPosition" value="'+(t&&t.position?t.position:'Guru Al-Quran')+'"></div></div>'+
-  '<div class="input-row"><div class="field"><label>Status</label><select id="tStatus"><option '+(t&&t.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(t&&t.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div><div class="field"><label>Tarikh Mula Berkhidmat</label><input type="date" id="tServiceStart" value="'+(t&&t.serviceStartDate?t.serviceStartDate:todayISO())+'"></div></div>'+
-  '<div class="field"><label>Hari Mengajar (rujukan umum)</label><div>'+dayChecks+'</div><span class="hint">Ini untuk paparan jadual sahaja. Kebenaran sebenar untuk rekod kehadiran ditentukan oleh Hari Kelas dalam Sunting Kelas.</span></div>'+
-  '<div class="input-row"><div class="field"><label>Nama Bank</label><input type="text" id="tBankName" value="'+(t&&t.bankName?t.bankName:'')+'" placeholder="Contoh: Maybank"></div><div class="field"><label>No. Akaun Bank</label><input type="text" id="tBankAccount" value="'+(t&&t.bankAccount?t.bankAccount:'')+'" placeholder="Contoh: 1234567890"></div></div>'+
-  '<div class="input-row"><div class="field"><label>Jenis Elaun</label><select id="tAllowanceType"><option value="Sesi" '+(allowanceType==='Sesi'?'selected':'')+'>Per Sesi Kehadiran</option><option value="Tetap" '+(allowanceType==='Tetap'?'selected':'')+'>Kadar Tetap Bulanan</option></select></div><div class="field"><label>Kadar Elaun (RM)</label><input type="number" id="tAllowanceRate" value="'+(t&&t.allowanceRate!=null?t.allowanceRate:30)+'" min="0"><span class="hint">Jika "Per Sesi": RM setiap sesi kelas direkod. Jika "Tetap": jumlah tetap sebulan.</span></div></div>';
+  '<div class="field"><label>Status</label><select id="tStatus"><option '+(t&&t.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(t&&t.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>'+
+  '<div class="field"><label>Hari Mengajar</label><div>'+dayChecks+'</div><span class="hint">Pilih hari-hari guru ini mengajar untuk susun jadual.</span></div>'+
+  '<div class="input-row"><div class="field"><label>Nama Bank</label><input type="text" id="tBankName" value="'+(t&&t.bankName?t.bankName:'')+'" placeholder="Contoh: Maybank"></div><div class="field"><label>No. Akaun Bank</label><input type="text" id="tBankAccount" value="'+(t&&t.bankAccount?t.bankAccount:'')+'" placeholder="Contoh: 1234567890"></div></div>';
   openModal(t?'Sunting Guru':'Tambah Guru', body, '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveTeacherForm('+(t?"'"+t.id+"'":'null')+')">Simpan</button>');
 }
 function saveTeacherForm(id){
@@ -1568,10 +1550,7 @@ function saveTeacherForm(id){
   document.querySelectorAll('.tDayCheck:checked').forEach(function(el){ checkedDays.push(el.value); });
   var data = {
     name:name, email:document.getElementById('tEmail').value.trim(), phone:document.getElementById('tPhone').value.trim(), status:document.getElementById('tStatus').value,
-    days: checkedDays, bankName: document.getElementById('tBankName').value.trim(), bankAccount: document.getElementById('tBankAccount').value.trim(),
-    icNumber: document.getElementById('tIcNumber').value.trim(), position: document.getElementById('tPosition').value.trim() || 'Guru Al-Quran',
-    serviceStartDate: document.getElementById('tServiceStart').value,
-    allowanceType: document.getElementById('tAllowanceType').value, allowanceRate: parseFloat(document.getElementById('tAllowanceRate').value) || 0
+    days: checkedDays, bankName: document.getElementById('tBankName').value.trim(), bankAccount: document.getElementById('tBankAccount').value.trim()
   };
   if(id){ var t = teacherById(id); for(var k in data){ t[k]=data[k]; } toast('Maklumat guru dikemaskini.'); }
   else { data.id = uid('t'); data.classes=[]; appState.teachers.push(data); toast('Guru baharu ditambah.'); }
@@ -1585,12 +1564,9 @@ function renderAdminClasses(c){
   grid.innerHTML = appState.classes.map(function(cl){
     var t = teacherById(cl.teacherId);
     var count = appState.students.filter(function(s){return s.classId===cl.id && s.status==='Aktif';}).length;
-    var days = cl.days || [];
-    var daysHtml = days.length ? days.map(function(d){return '<span class="badge badge-green" style="margin-right:4px;">'+d+'</span>';}).join('') : '<span style="color:var(--danger);font-size:12px;">Hari belum ditetapkan</span>';
     return '<div class="card card-pad"><div style="display:flex;justify-content:space-between;"><h4 style="font-size:16px;">'+cl.name+'</h4>'+levelBadge(cl.level)+'</div>'+
     '<p style="font-size:13px;color:var(--muted);margin-top:6px;">'+cl.time+'</p>'+
-    '<div style="margin:10px 0;">'+daysHtml+'</div>'+
-    '<div style="margin-top:8px;font-size:13px;">Guru: <strong>'+(t?t.name:'-')+'</strong></div>'+
+    '<div style="margin-top:14px;font-size:13px;">Guru: <strong>'+(t?t.name:'-')+'</strong></div>'+
     '<div style="margin-top:6px;font-size:13px;">Pelajar: <strong>'+count+'/'+cl.capacity+'</strong></div>'+
     '<div class="progress"><div style="width:'+Math.min(100,count/cl.capacity*100)+'%;"></div></div>'+
     '<button class="btn btn-outline btn-sm btn-block" style="margin-top:14px;" onclick="openClassForm(\''+cl.id+'\')">Sunting</button></div>';
@@ -1599,24 +1575,16 @@ function renderAdminClasses(c){
 function openClassForm(id){
   var cl = id? classById(id): null;
   var teacherOpts = appState.teachers.map(function(t){ return '<option value="'+t.id+'" '+(cl&&cl.teacherId===t.id?'selected':'')+'>'+t.name+'</option>'; }).join('');
-  var clDays = (cl && cl.days) || [];
-  var dayChecks = HARI_LIST.map(function(d){
-    var checked = clDays.indexOf(d)!==-1 ? 'checked' : '';
-    return '<label style="display:inline-flex;align-items:center;gap:6px;margin:0 12px 8px 0;font-size:13px;font-weight:500;"><input type="checkbox" class="cDayCheck" value="'+d+'" '+checked+' style="width:auto;">'+d+'</label>';
-  }).join('');
   var body =
   '<div class="field"><label>Nama Kelas</label><input type="text" id="cName" value="'+(cl?cl.name:'')+'"></div>'+
   '<div class="input-row"><div class="field"><label>Masa</label><input type="text" id="cTime" value="'+(cl?cl.time:'')+'" placeholder="Contoh: 8:00 - 9:00 malam"></div><div class="field"><label>Kapasiti</label><input type="number" id="cCapacity" value="'+(cl?cl.capacity:20)+'"></div></div>'+
-  '<div class="input-row"><div class="field"><label>Tahap</label><input type="text" id="cLevel" value="'+(cl?cl.level:'')+'"></div><div class="field"><label>Guru</label><select id="cTeacher">'+teacherOpts+'</select></div></div>'+
-  '<div class="field"><label>Hari Kelas Berjalan</label><div>'+dayChecks+'</div><span class="hint">PENTING: guru hanya boleh rekod kehadiran pada hari yang ditetapkan di sini. Boleh pilih lebih dari satu hari.</span></div>';
+  '<div class="input-row"><div class="field"><label>Tahap</label><input type="text" id="cLevel" value="'+(cl?cl.level:'')+'"></div><div class="field"><label>Guru</label><select id="cTeacher">'+teacherOpts+'</select></div></div>';
   openModal(cl?'Sunting Kelas':'Tambah Kelas', body, '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveClassForm('+(cl?"'"+cl.id+"'":'null')+')">Simpan</button>');
 }
 function saveClassForm(id){
   var name = document.getElementById('cName').value.trim();
   if(!name){ toast('Nama kelas diperlukan.','error'); return; }
-  var checkedDays = [];
-  document.querySelectorAll('.cDayCheck:checked').forEach(function(el){ checkedDays.push(el.value); });
-  var data = {name:name, time:document.getElementById('cTime').value.trim(), capacity:parseInt(document.getElementById('cCapacity').value)||20, level:document.getElementById('cLevel').value.trim(), teacherId:document.getElementById('cTeacher').value, days:checkedDays};
+  var data = {name:name, time:document.getElementById('cTime').value.trim(), capacity:parseInt(document.getElementById('cCapacity').value)||20, level:document.getElementById('cLevel').value.trim(), teacherId:document.getElementById('cTeacher').value};
   if(id){ var cl = classById(id); for(var k in data){ cl[k]=data[k]; } toast('Kelas dikemaskini.'); }
   else { data.id = uid('c'); appState.classes.push(data); toast('Kelas baharu ditambah.'); }
   saveData(); closeModal(); renderAdminClasses(document.getElementById('adminContent'));
@@ -1716,11 +1684,20 @@ function renderLeaveTable(status){
     if(status==='Pending'){
       actions = '<button class="icon-action" title="Luluskan" onclick="approveLeave(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg></button>'+
       '<button class="icon-action danger" title="Tolak" onclick="rejectLeave(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
-    } else {
-      actions = '<span style="font-size:12px;color:var(--muted);">-</span>';
     }
+    actions += '<button class="icon-action danger" title="Padam Rekod" onclick="deleteLeaveRequest(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>';
     return '<tr><td>'+l.teacherName+'</td><td>'+fmtDate(l.dateFrom)+'</td><td>'+fmtDate(l.dateTo)+'</td><td>'+l.reason+'</td><td>'+fmtDate(l.submittedAt)+'</td><td><div class="row-actions">'+actions+'</div></td></tr>';
   }).join('');
+}
+function deleteLeaveRequest(id){
+  var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
+  if(!l) return;
+  confirmAction('Padam rekod cuti <strong>'+l.teacherName+'</strong> ('+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+')? Tindakan ini tidak boleh dibatalkan. Kalau cuti ni telah diluluskan dan masih dalam tempoh aktif, amaran di Dashboard juga akan hilang serta-merta.', function(){
+    appState.leaveRequests = appState.leaveRequests.filter(function(x){return x.id!==id;});
+    saveData();
+    renderAdminLeave(document.getElementById('adminContent'));
+    toast('Rekod cuti telah dipadam.');
+  });
 }
 function approveLeave(id){
   var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
@@ -1819,164 +1796,6 @@ function saveFeePayment(id){
   saveData(); closeModal(); renderFeeTable(); toast('Bayaran yuran telah direkodkan.');
   var s = studentById(f.studentId);
   if(s) sendWhatsApp(s.guardianPhone, 'Assalamualaikum. Terima kasih, bayaran yuran '+s.fullName+' bagi bulan '+f.month+' telah diterima.');
-}
-
-/* ---- Admin: Elaun Guru ---- */
-function getTeacherSessionsInMonth(teacherId, month){
-  var classIds = appState.classes.filter(function(cl){return cl.teacherId===teacherId;}).map(function(cl){return cl.id;});
-  var seen = {};
-  appState.attendance.forEach(function(a){
-    if(classIds.indexOf(a.classId)!==-1 && a.date.indexOf(month)===0){
-      seen[a.classId+'|'+a.date] = true;
-    }
-  });
-  return Object.keys(seen).length;
-}
-var payslipDraft = null;
-function renderAdminPayslips(c){
-  var monthNames = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-  var teacherOpts = appState.teachers.map(function(t){ return '<option value="'+t.id+'">'+t.name+'</option>'; }).join('');
-  var monthOpts = monthNames.map(function(m,i){ return '<option value="'+i+'" '+(i===new Date().getMonth()?'selected':'')+'>'+m+'</option>'; }).join('');
-  c.innerHTML =
-  '<div class="two-col">'+
-  '<div class="card card-pad"><h3 style="margin-bottom:16px;">Jana Slip Elaun</h3>'+
-  '<div class="field"><label>Guru</label><select id="paySlipTeacher">'+teacherOpts+'</select></div>'+
-  '<div class="input-row"><div class="field"><label>Bulan</label><select id="paySlipMonth">'+monthOpts+'</select></div><div class="field"><label>Tahun</label><select id="paySlipYear"><option>2026</option><option>2025</option></select></div></div>'+
-  '<button class="btn btn-primary btn-block" onclick="generatePayslipDraft()">Jana Cadangan Elaun</button>'+
-  '</div>'+
-  '<div class="card card-pad"><h3 style="margin-bottom:10px;">Cara Kiraan</h3><p style="font-size:13.5px;color:var(--muted);">Untuk guru "Per Sesi": jumlah = kadar &times; bilangan sesi UNIK (kelas+tarikh) yang direkodkan bulan tu. Untuk guru "Tetap": jumlah tetap bulanan. Admin boleh tambah bonus/potongan sebelum terbitkan.</p></div>'+
-  '</div>'+
-  '<div id="payslipDraftHost"></div>'+
-  '<div class="t-section-title" style="margin:24px 0 10px;color:var(--emerald-darker);font-size:14px;font-weight:700;">Sejarah Slip Diterbitkan</div>'+
-  '<div class="card"><div class="table-wrap"><table><thead><tr><th>Guru</th><th>Bulan</th><th>Jumlah Bersih</th><th>Tarikh Terbit</th><th>Tindakan</th></tr></thead><tbody id="payslipHistoryBody"></tbody></table></div></div>'+
-  '<div id="payslipPrintHost"></div>';
-  renderPayslipHistoryTable();
-}
-function renderPayslipHistoryTable(){
-  var body = document.getElementById('payslipHistoryBody');
-  var list = appState.payslips.slice().sort(function(a,b){return b.issuedDate.localeCompare(a.issuedDate);});
-  if(list.length===0){ body.innerHTML = emptyRow(5); return; }
-  body.innerHTML = list.map(function(p){
-    return '<tr><td>'+p.teacherName+'</td><td>'+p.monthLabel+'</td><td>RM'+p.totalAmount.toFixed(2)+'</td><td>'+fmtDate(p.issuedDate)+'</td><td><button class="btn btn-outline btn-sm" onclick="viewPayslip(\''+p.id+'\')">Lihat/Cetak</button></td></tr>';
-  }).join('');
-}
-function generatePayslipDraft(){
-  var teacherId = document.getElementById('paySlipTeacher').value;
-  var monthIdx = parseInt(document.getElementById('paySlipMonth').value);
-  var year = document.getElementById('paySlipYear').value;
-  var t = teacherById(teacherId);
-  if(!t){ toast('Sila pilih guru.', 'error'); return; }
-  var monthKey = year+'-'+pad(monthIdx+1);
-  var sessionCount = getTeacherSessionsInMonth(teacherId, monthKey);
-  var allowanceType = t.allowanceType || 'Sesi';
-  var allowanceRate = t.allowanceRate!=null ? t.allowanceRate : 0;
-  var baseAmount = allowanceType==='Tetap' ? allowanceRate : (allowanceRate * sessionCount);
-  payslipDraft = {
-    teacherId: teacherId, teacherName: t.name, icNumber: t.icNumber||'-', position: t.position||'Guru Al-Quran',
-    serviceStartDate: t.serviceStartDate||'-', bankName: t.bankName||'-', bankAccount: t.bankAccount||'-',
-    monthIdx: monthIdx, year: year, monthKey: monthKey,
-    allowanceType: allowanceType, allowanceRate: allowanceRate, sessionCount: sessionCount, baseAmount: baseAmount,
-    adjustments: []
-  };
-  renderPayslipDraftEditor();
-}
-function renderPayslipDraftEditor(){
-  var host = document.getElementById('payslipDraftHost');
-  if(!payslipDraft){ host.innerHTML=''; return; }
-  var d = payslipDraft;
-  var monthNames = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-  var adjTotal = d.adjustments.reduce(function(s,a){return s+a.amount;},0);
-  var netTotal = d.baseAmount + adjTotal;
-  var adjRowsHtml = d.adjustments.map(function(a,idx){
-    return '<div class="input-row" style="align-items:flex-end;"><div class="field" style="margin-bottom:8px;"><label>Catatan</label><input type="text" value="'+a.label+'" onchange="updatePayslipAdjustment('+idx+',\'label\',this.value)"></div><div class="field" style="margin-bottom:8px;"><label>Jumlah (RM, - untuk potongan)</label><input type="number" value="'+a.amount+'" onchange="updatePayslipAdjustment('+idx+',\'amount\',this.value)"></div><button class="icon-action danger" style="margin-bottom:16px;" onclick="removePayslipAdjustment('+idx+')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>';
-  }).join('');
-  host.innerHTML =
-  '<div class="card card-pad" style="margin-top:20px;max-width:640px;">'+
-  '<h3 style="font-size:15.5px;margin-bottom:14px;">Cadangan Elaun: '+d.teacherName+' &mdash; '+monthNames[d.monthIdx]+' '+d.year+'</h3>'+
-  '<div class="kv"><span>Jenis Elaun</span><span>'+(d.allowanceType==='Tetap'?'Kadar Tetap Bulanan':'Per Sesi Kehadiran')+'</span></div>'+
-  (d.allowanceType==='Sesi' ? '<div class="kv"><span>Bilangan Sesi Direkod</span><span>'+d.sessionCount+' sesi &times; RM'+d.allowanceRate+'</span></div>' : '<div class="kv"><span>Kadar Tetap</span><span>RM'+d.allowanceRate+'</span></div>')+
-  '<div class="kv"><span>Jumlah Asas</span><span><strong>RM'+d.baseAmount.toFixed(2)+'</strong></span></div>'+
-  '<div style="margin-top:16px;"><div class="t-section-title" style="margin:0 0 10px;font-size:13px;">Pelarasan (Bonus / Potongan)</div>'+adjRowsHtml+'</div>'+
-  '<button class="btn btn-outline btn-sm" onclick="addPayslipAdjustment()">+ Tambah Baris Pelarasan</button>'+
-  '<div class="kv" style="border-top:2px solid var(--text);margin-top:14px;padding-top:10px;"><span><strong>Jumlah Bersih</strong></span><span style="font-size:17px;color:var(--emerald-darker);"><strong>RM'+netTotal.toFixed(2)+'</strong></span></div>'+
-  '<button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="issuePayslip()">Terbitkan Slip</button>'+
-  '</div>';
-}
-function addPayslipAdjustment(){
-  if(!payslipDraft) return;
-  payslipDraft.adjustments.push({label:'', amount:0});
-  renderPayslipDraftEditor();
-}
-function updatePayslipAdjustment(idx, field, value){
-  if(!payslipDraft) return;
-  if(field==='amount'){ payslipDraft.adjustments[idx].amount = parseFloat(value)||0; }
-  else { payslipDraft.adjustments[idx].label = value; }
-}
-function removePayslipAdjustment(idx){
-  if(!payslipDraft) return;
-  payslipDraft.adjustments.splice(idx,1);
-  renderPayslipDraftEditor();
-}
-function issuePayslip(){
-  if(!payslipDraft) return;
-  var d = payslipDraft;
-  var monthNames = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-  var existing = appState.payslips.filter(function(p){return p.teacherId===d.teacherId && p.monthKey===d.monthKey;})[0];
-  var doIssue = function(){
-    var adjTotal = d.adjustments.reduce(function(s,a){return s+a.amount;},0);
-    var netTotal = d.baseAmount + adjTotal;
-    var payslip = {
-      id: existing? existing.id : uid('pay'), teacherId: d.teacherId, teacherName: d.teacherName, icNumber: d.icNumber, position: d.position,
-      serviceStartDate: d.serviceStartDate, bankName: d.bankName, bankAccount: d.bankAccount,
-      monthKey: d.monthKey, monthLabel: monthNames[d.monthIdx]+' '+d.year,
-      allowanceType: d.allowanceType, allowanceRate: d.allowanceRate, sessionCount: d.sessionCount, baseAmount: d.baseAmount,
-      adjustments: d.adjustments.slice(), totalAmount: netTotal, issuedDate: todayISO()
-    };
-    if(existing){ appState.payslips = appState.payslips.filter(function(p){return p.id!==existing.id;}); }
-    appState.payslips.unshift(payslip);
-    pushNotification('Slip elaun '+d.teacherName+' bagi '+monthNames[d.monthIdx]+' '+d.year+' telah diterbitkan (RM'+netTotal.toFixed(2)+').');
-    saveData();
-    toast('Slip elaun berjaya diterbitkan.');
-    renderPayslipHistoryTable();
-    viewPayslip(payslip.id);
-    payslipDraft = null;
-    document.getElementById('payslipDraftHost').innerHTML = '';
-  };
-  if(existing){
-    confirmAction('Slip untuk '+d.teacherName+' bagi bulan ini sudah pernah diterbitkan. Terbitkan semula dan gantikan yang lama?', doIssue);
-  } else {
-    doIssue();
-  }
-}
-function viewPayslip(id, hostId){
-  var p = appState.payslips.filter(function(x){return x.id===id;})[0];
-  if(!p) return;
-  var host = document.getElementById(hostId || 'payslipPrintHost');
-  if(!host) return;
-  var adjHtml = p.adjustments.length ? p.adjustments.map(function(a){ return '<div class="kv"><span>'+(a.label||'Pelarasan')+'</span><span>'+(a.amount>=0?'+':'')+'RM'+a.amount.toFixed(2)+'</span></div>'; }).join('') : '<div class="kv"><span>Tiada pelarasan</span><span>-</span></div>';
-  host.innerHTML =
-  '<div class="report-doc" id="printArea" style="margin-top:24px;">'+
-    '<div class="report-head"><div class="brand"><span class="brand-mark"></span><span>E-Mengaji</span></div><h2>Slip Elaun Guru &mdash; '+p.monthLabel+'</h2></div>'+
-    '<div class="report-body">'+
-      '<div class="report-grid"><div class="report-block"><h5>Maklumat Guru</h5>'+
-        '<div class="kv"><span>Nama</span><span>'+p.teacherName+'</span></div>'+
-        '<div class="kv"><span>No. Kad Pengenalan</span><span>'+(p.icNumber||'-')+'</span></div>'+
-        '<div class="kv"><span>Jawatan</span><span>'+(p.position||'-')+'</span></div>'+
-        '<div class="kv"><span>Tarikh Mula Berkhidmat</span><span>'+fmtDate(p.serviceStartDate)+'</span></div></div>'+
-        '<div class="report-block"><h5>Maklumat Bank</h5>'+
-        '<div class="kv"><span>Bank</span><span>'+(p.bankName||'-')+'</span></div>'+
-        '<div class="kv"><span>No. Akaun</span><span>'+(p.bankAccount||'-')+'</span></div>'+
-        '<div class="kv"><span>Bulan Elaun</span><span>'+p.monthLabel+'</span></div>'+
-        '<div class="kv"><span>Tarikh Terbit</span><span>'+fmtDate(p.issuedDate)+'</span></div></div></div>'+
-      '<div class="report-block"><h5>Butiran Elaun</h5>'+
-        '<div class="kv"><span>Jenis</span><span>'+(p.allowanceType==='Tetap'?'Kadar Tetap Bulanan':'Per Sesi Kehadiran')+'</span></div>'+
-        (p.allowanceType==='Sesi' ? '<div class="kv"><span>Bilangan Sesi ('+p.sessionCount+' &times; RM'+p.allowanceRate+')</span><span>RM'+p.baseAmount.toFixed(2)+'</span></div>' : '<div class="kv"><span>Kadar Tetap</span><span>RM'+p.baseAmount.toFixed(2)+'</span></div>')+
-        adjHtml+
-        '<div class="kv" style="border-top:2px solid var(--text);margin-top:10px;padding-top:10px;"><span><strong>Jumlah Bersih</strong></span><span style="font-size:17px;"><strong>RM'+p.totalAmount.toFixed(2)+'</strong></span></div></div>'+
-      '<div class="report-signoff"><div><div class="sig-line">Tandatangan Guru</div></div><div><div class="sig-line">Tandatangan Admin / Pengurusan</div></div></div>'+
-    '</div></div>'+
-  '<div class="no-print" style="max-width:760px;margin:16px auto 0;text-align:right;"><button class="btn btn-primary" onclick="window.print()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg> Cetak / Simpan PDF</button></div>';
-  if(typeof host.scrollIntoView === 'function'){ host.scrollIntoView({behavior:'smooth'}); }
 }
 
 /* ---- Admin: Reports ---- */
@@ -2191,103 +2010,6 @@ function renderTeacherBottomNav(active){
 }
 var teacherAttState = {classId:null, date: todayISO(), rows:{}, _loadedDate:null};
 
-/* ---- Kalendar Custom untuk Kehadiran (sekat ikut Hari Kelas + had 3 hari lepas + cuti) ---- */
-var DAY_NAME_BY_INDEX = ["Ahad","Isnin","Selasa","Rabu","Khamis","Jumaat","Sabtu"];
-var MONTH_NAMES_MS = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-var ATTENDANCE_BACKDATE_LIMIT_DAYS = 3;
-function dayNameOf(dateISO){
-  var d = new Date(dateISO+'T00:00:00');
-  return DAY_NAME_BY_INDEX[d.getDay()];
-}
-function addDaysISO(dateISO, delta){
-  var d = new Date(dateISO+'T00:00:00');
-  d.setDate(d.getDate()+delta);
-  return d.toISOString().slice(0,10);
-}
-function isAttendanceDateSelectable(dateISO, classId, teacherId){
-  var todayStr = todayISO();
-  var minDate = addDaysISO(todayStr, -ATTENDANCE_BACKDATE_LIMIT_DAYS);
-  if(dateISO > todayStr || dateISO < minDate) return false;
-  var cls = classById(classId);
-  var allowedDays = (cls && cls.days) || [];
-  if(allowedDays.length && allowedDays.indexOf(dayNameOf(dateISO))===-1) return false;
-  if(teacherId && isTeacherOnLeave(teacherId, dateISO)) return false;
-  return true;
-}
-function findLatestSelectableDate(classId, teacherId){
-  var todayStr = todayISO();
-  for(var i=0;i<=ATTENDANCE_BACKDATE_LIMIT_DAYS;i++){
-    var d = addDaysISO(todayStr, -i);
-    if(isAttendanceDateSelectable(d, classId, teacherId)) return d;
-  }
-  return todayStr;
-}
-var teacherCalState = {viewYear:null, viewMonth:null};
-function toggleAttCalendar(){
-  var popup = document.getElementById('attCalendarPopup');
-  if(!popup) return;
-  var willOpen = popup.style.display !== 'block';
-  if(willOpen){
-    var d = new Date(teacherAttState.date+'T00:00:00');
-    teacherCalState.viewYear = d.getFullYear();
-    teacherCalState.viewMonth = d.getMonth();
-    renderAttCalendarPopup();
-    popup.style.display = 'block';
-  } else {
-    popup.style.display = 'none';
-  }
-}
-function changeAttCalendarMonth(delta){
-  teacherCalState.viewMonth += delta;
-  if(teacherCalState.viewMonth<0){ teacherCalState.viewMonth=11; teacherCalState.viewYear--; }
-  if(teacherCalState.viewMonth>11){ teacherCalState.viewMonth=0; teacherCalState.viewYear++; }
-  renderAttCalendarPopup();
-}
-function renderAttCalendarPopup(){
-  var popup = document.getElementById('attCalendarPopup');
-  if(!popup) return;
-  var year = teacherCalState.viewYear, month = teacherCalState.viewMonth;
-  var classId = teacherAttState.classId;
-  var teacherId = appState.currentUser ? appState.currentUser.id : null;
-  var firstDay = new Date(year, month, 1);
-  var startWeekday = firstDay.getDay();
-  var daysInMonth = new Date(year, month+1, 0).getDate();
-  var dowLabels = ['Ahd','Isn','Sel','Rab','Kha','Jum','Sab'];
-  var html = '<div class="mini-cal">';
-  html += '<div class="mini-cal-head"><button type="button" onclick="changeAttCalendarMonth(-1)">&#8592;</button><strong style="font-size:13.5px;">'+MONTH_NAMES_MS[month]+' '+year+'</strong><button type="button" onclick="changeAttCalendarMonth(1)">&#8594;</button></div>';
-  html += '<div class="mini-cal-grid">';
-  dowLabels.forEach(function(lbl){ html += '<div class="dow">'+lbl+'</div>'; });
-  for(var i=0;i<startWeekday;i++){ html += '<div></div>'; }
-  for(var day=1; day<=daysInMonth; day++){
-    var dateISO = year+'-'+pad(month+1)+'-'+pad(day);
-    var selectable = isAttendanceDateSelectable(dateISO, classId, teacherId);
-    var isSelected = dateISO===teacherAttState.date;
-    var isToday = dateISO===todayISO();
-    html += '<button type="button" class="mini-cal-day'+(isSelected?' cal-selected':'')+(isToday?' cal-today':'')+'" '+(selectable?('onclick="selectAttDate(\''+dateISO+'\')"'):'disabled')+'>'+day+'</button>';
-  }
-  html += '</div></div>';
-  var cls = classById(classId);
-  if(cls && (!cls.days || cls.days.length===0)){
-    html += '<p class="hint" style="margin-top:10px;color:var(--danger);">Amaran: hari kelas ini belum ditetapkan oleh admin. Semua hari dalam tempoh '+ATTENDANCE_BACKDATE_LIMIT_DAYS+' hari lepas dibenarkan buat sementara.</p>';
-  } else {
-    html += '<p class="hint" style="margin-top:10px;">Hanya hari kelas ini berjalan (dalam tempoh '+ATTENDANCE_BACKDATE_LIMIT_DAYS+' hari lepas hingga hari ini) boleh dipilih.</p>';
-  }
-  popup.innerHTML = html;
-}
-function selectAttDate(dateISO){
-  teacherAttState.date = dateISO;
-  var popup = document.getElementById('attCalendarPopup');
-  if(popup) popup.style.display = 'none';
-  renderTeacher('kehadiran');
-}
-document.addEventListener('click', function(e){
-  var popup = document.getElementById('attCalendarPopup');
-  var trigger = document.getElementById('attDateTrigger');
-  if(popup && popup.style.display==='block' && trigger && !popup.contains(e.target) && !trigger.contains(e.target)){
-    popup.style.display = 'none';
-  }
-});
-
 /* ---- Sistem badge notifikasi (pengumuman) untuk Guru & Ibu Bapa ---- */
 function getRelevantAnnouncementsForRole(role){
   return appState.announcements.filter(function(a){
@@ -2365,10 +2087,6 @@ function renderTeacherClasses(c, teacher){
 function renderTeacherAttendance(c, teacher){
   var myClasses = appState.classes.filter(function(cl){return cl.teacherId===teacher.id;});
   if(!teacherAttState.classId && myClasses.length) teacherAttState.classId = myClasses[0].id;
-  // Jika tarikh semasa tak sah lagi untuk kelas ni (contoh: baru tukar kelas), auto-pilih tarikh sah terkini
-  if(!isAttendanceDateSelectable(teacherAttState.date, teacherAttState.classId, teacher.id)){
-    teacherAttState.date = findLatestSelectableDate(teacherAttState.classId, teacher.id);
-  }
   var roster = appState.students.filter(function(s){return s.classId===teacherAttState.classId && s.status==='Aktif';});
   if(teacherAttState._loadedDate !== teacherAttState.date || teacherAttState._loadedClass !== teacherAttState.classId){
     teacherAttState.rows = {};
@@ -2383,18 +2101,12 @@ function renderTeacherAttendance(c, teacher){
   for(var k in teacherAttState.rows){ var st = teacherAttState.rows[k].status; if(st==='Hadir'||st==='Lewat') hadirN++; if(st==='Tidak Hadir') tidakN++; }
 
   var classOpts = myClasses.map(function(cl){ return '<option value="'+cl.id+'" '+(cl.id===teacherAttState.classId?'selected':'')+'>'+cl.name+'</option>'; }).join('');
-  var currentCls = classById(teacherAttState.classId);
-  var dayLabelText = currentCls && currentCls.days && currentCls.days.length ? currentCls.days.join(', ') : 'Belum ditetapkan admin';
 
   var html = '';
   html += '<div class="input-row" style="margin-bottom:14px;">';
   html += '<div class="field" style="margin-bottom:0;"><label>Kelas</label><select id="teachAttClass" onchange="teacherAttState.classId=this.value; renderTeacher(\'kehadiran\');">'+classOpts+'</select></div>';
-  html += '<div class="field" style="margin-bottom:0;position:relative;"><label>Tarikh</label>'+
-    '<button type="button" id="attDateTrigger" class="btn btn-outline btn-block" style="justify-content:space-between;" onclick="toggleAttCalendar()"><span>'+fmtDate(teacherAttState.date)+'</span><svg class="icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button>'+
-    '<div id="attCalendarPopup" class="att-date-popup card"></div>'+
-  '</div>';
+  html += '<div class="field" style="margin-bottom:0;"><label>Tarikh</label><input type="date" id="teachAttDate" value="'+teacherAttState.date+'" onchange="teacherAttState.date=this.value; renderTeacher(\'kehadiran\');"></div>';
   html += '</div>';
-  html += '<p class="hint" style="margin-top:-8px;margin-bottom:14px;">Hari kelas ini: <strong>'+dayLabelText+'</strong></p>';
   html += '<div class="mini-stat-row"><div class="mini-stat"><b>'+hadirN+'</b><span>Hadir</span></div><div class="mini-stat"><b>'+tidakN+'</b><span>Tidak Hadir</span></div><div class="mini-stat"><b>'+roster.length+'</b><span>Jumlah</span></div></div>';
   html += '<button class="btn btn-outline btn-block" style="margin-bottom:14px;" onclick="markAllPresent()">'+iconSvg('check')+' Tandakan Semua Hadir</button>';
   html += '<div id="attRosterList">';
@@ -2427,11 +2139,6 @@ function markAllPresent(){
 }
 function saveAttendance(){
   var classId = teacherAttState.classId, date = teacherAttState.date, rows = teacherAttState.rows;
-  var teacherId = appState.currentUser ? appState.currentUser.id : null;
-  if(!isAttendanceDateSelectable(date, classId, teacherId)){
-    toast('Tarikh ini tidak sah untuk kelas ini (bukan hari kelas berjalan, di luar tempoh dibenarkan, atau bertindih dengan cuti). Sila pilih semula.', 'error');
-    return;
-  }
   Object.keys(rows).forEach(function(studentId){
     var rec = appState.attendance.filter(function(a){return a.studentId===studentId && a.classId===classId && a.date===date;})[0];
     if(rec){ rec.status = rows[studentId].status; rec.note = rows[studentId].note; }
@@ -2506,23 +2213,14 @@ function saveReadingRecord(studentId){
 function renderTeacherProfile(c, teacher){
   var myClasses = appState.classes.filter(function(cl){return cl.teacherId===teacher.id;});
   var myLeaves = appState.leaveRequests.filter(function(l){return l.teacherId===teacher.id;}).sort(function(a,b){return b.submittedAt.localeCompare(a.submittedAt);});
-  var myPayslips = appState.payslips.filter(function(p){return p.teacherId===teacher.id;}).sort(function(a,b){return b.monthKey.localeCompare(a.monthKey);});
   c.innerHTML =
   '<div class="today-card" style="text-align:center;"><div class="avatar" style="width:64px;height:64px;font-size:20px;margin:0 auto 12px;background:var(--emerald);">'+initials(teacher.name)+'</div><h3>'+teacher.name+'</h3><p style="font-size:13px;color:var(--muted);margin-top:4px;">'+teacher.email+'</p><p style="font-size:13px;color:var(--muted);">'+teacher.phone+'</p></div>'+
   '<div class="t-section-title">Kelas Ditugaskan</div>'+
   myClasses.map(function(cl){ return '<div class="t-class-item"><div class="cname">'+cl.name+'</div><div class="ctime">'+cl.time+'</div></div>'; }).join('')+
-  '<div class="t-section-title">Sejarah Slip Elaun</div>'+
-  (myPayslips.length? myPayslips.map(function(p){ return '<div class="t-class-item"><div><div class="cname">'+p.monthLabel+'</div><div class="ctime">RM'+p.totalAmount.toFixed(2)+'</div></div><button class="btn btn-outline btn-sm" onclick="viewTeacherPayslip(\''+p.id+'\')">Lihat</button></div>'; }).join('') : '<div class="empty-state">Tiada slip elaun lagi.</div>')+
-  '<div id="teacherPayslipHost"></div>'+
   '<div class="t-section-title">Permohonan Cuti</div>'+
   '<button class="btn btn-primary btn-block" style="margin-bottom:12px;" onclick="openLeaveForm(\''+teacher.id+'\',\''+teacher.name.replace(/'/g,'')+'\')">'+iconSvg('leave')+' Mohon Cuti Baharu</button>'+
   (myLeaves.length? myLeaves.map(function(l){ return '<div class="t-class-item"><div><div class="cname">'+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+'</div><div class="ctime">'+l.reason+'</div></div>'+statusBadge(l.status)+'</div>'; }).join('') : '<div class="empty-state">Tiada rekod permohonan cuti.</div>')+
   '<button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="logout()">Log Keluar</button>';
-}
-function viewTeacherPayslip(id){
-  viewPayslip(id, 'teacherPayslipHost');
-  var host = document.getElementById('teacherPayslipHost');
-  if(host && typeof host.scrollIntoView === 'function'){ host.scrollIntoView({behavior:'smooth'}); }
 }
 function openLeaveForm(teacherId, teacherName){
   openModal('Mohon Cuti',
