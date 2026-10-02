@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HISSUK Center — Sistem Pengurusan Kelas Mengaji</title>
+<title>E-Mengaji — Sistem Pengurusan Kelas Mengaji</title>
 <style>
 /* =========================================================
-   HISSUK CENTER — DESIGN TOKENS
+   E-MENGAJI — DESIGN TOKENS
    ========================================================= */
 :root{
   --emerald:#047857;
@@ -437,7 +437,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
 <section class="page" id="page-landing">
   <header class="nav-public">
     <div class="container">
-      <a href="#/" class="brand"><span class="brand-mark"></span><span>HISSUK Center</span></a>
+      <a href="#/" class="brand"><span class="brand-mark"></span><span>E-Mengaji</span></a>
       <nav class="nav-links">
         <a href="#/">Utama</a>
         <a href="javascript:void(0)" onclick="document.getElementById('tentang-anchor').scrollIntoView({behavior:'smooth'});">Tentang</a>
@@ -473,7 +473,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
     <div class="container">
       <div class="section-head">
         <h2>Satu platform, semua keperluan pusat mengaji</h2>
-        <p>Daripada kehadiran hingga laporan perkembangan anak — HISSUK Center menghubungkan admin, guru dan ibu bapa dengan lancar.</p>
+        <p>Daripada kehadiran hingga laporan perkembangan anak — E-Mengaji menghubungkan admin, guru dan ibu bapa dengan lancar.</p>
       </div>
       <div class="grid-4">
         <div class="feature-card">
@@ -553,7 +553,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a href="#/" class="brand"><span class="brand-mark"></span><span>HISSUK Center</span></a>
+          <a href="#/" class="brand"><span class="brand-mark"></span><span>E-Mengaji</span></a>
           <p style="margin-top:14px;font-size:13.5px;max-width:34ch;">Sistem pengurusan pusat mengaji yang menghubungkan admin, guru dan ibu bapa.</p>
         </div>
         <div>
@@ -569,7 +569,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
           <ul><li>hello@emengaji.test</li><li>+60 12-345 6789</li></ul>
         </div>
       </div>
-      <div class="footer-bottom">© 2026 HISSUK Center. Prototype sistem — bukan produk sebenar.</div>
+      <div class="footer-bottom">© 2026 E-Mengaji. Prototype sistem — bukan produk sebenar.</div>
     </div>
   </footer>
 </section>
@@ -589,9 +589,9 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
     </div>
     <div class="auth-form-side">
       <div class="auth-box" id="main">
-        <div class="brand" style="color:var(--emerald-darker);justify-content:center;"><span class="brand-mark"></span><span>HISSUK Center</span></div>
+        <div class="brand" style="color:var(--emerald-darker);justify-content:center;"><span class="brand-mark"></span><span>E-Mengaji</span></div>
         <h2>Log Masuk</h2>
-        <p class="sub">Selamat kembali ke HISSUK Center</p>
+        <p class="sub">Selamat kembali ke E-Mengaji</p>
         <form id="loginForm" onsubmit="return handleLogin(event)" novalidate>
           <div class="field" id="loginEmailField">
             <label for="loginEmail">Email / Nombor Telefon</label>
@@ -609,6 +609,14 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
           </div>
           <button type="submit" class="btn btn-primary btn-block">Log Masuk</button>
         </form>
+        <div class="demo-box">
+          <p>Akaun Demo</p>
+          <div class="demo-chip-row">
+            <div class="demo-chip"><span>Admin — admin@emengaji.test</span><button class="btn btn-outline btn-sm" onclick="fillDemo('admin')">Guna</button></div>
+            <div class="demo-chip"><span>Guru — guru@emengaji.test</span><button class="btn btn-outline btn-sm" onclick="fillDemo('guru')">Guna</button></div>
+            <div class="demo-chip"><span>Ibu Bapa — parent@emengaji.test</span><button class="btn btn-outline btn-sm" onclick="fillDemo('parent')">Guna</button></div>
+          </div>
+        </div>
         <p style="text-align:center;margin-top:22px;font-size:13.5px;color:var(--muted);">Belum daftar anak? <a href="#/daftar" style="color:var(--emerald);font-weight:600;">Daftar sekarang</a></p>
       </div>
     </div>
@@ -631,7 +639,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
     </div>
     <div class="auth-form-side">
       <div class="auth-box" style="max-width:440px;">
-        <div class="brand" style="color:var(--emerald-darker);justify-content:center;"><span class="brand-mark"></span><span>HISSUK Center</span></div>
+        <div class="brand" style="color:var(--emerald-darker);justify-content:center;"><span class="brand-mark"></span><span>E-Mengaji</span></div>
         <h2>Pendaftaran Anak Mengaji</h2>
         <p class="sub">Mudah &amp; percuma. Admin akan menyemak permohonan tuan/puan.</p>
         <form id="regForm" onsubmit="return handleRegistration(event)" novalidate style="margin-top:24px;">
@@ -659,7 +667,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
   <div class="app-shell">
     <div class="sidebar-overlay" id="adminOverlay" onclick="toggleSidebar('admin',false)"></div>
     <aside class="sidebar" id="adminSidebar">
-      <div class="brand"><span class="brand-mark"></span><span>HISSUK Center</span></div>
+      <div class="brand"><span class="brand-mark"></span><span>E-Mengaji</span></div>
       <div class="sidebar-user">
         <div class="avatar" id="adminAvatar">A</div>
         <div><div class="name" id="adminName">Admin</div><div class="role">Super Admin</div></div>
@@ -716,7 +724,7 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
   <div class="app-shell">
     <div class="sidebar-overlay" id="parentOverlay" onclick="toggleSidebar('parent',false)"></div>
     <aside class="sidebar" id="parentSidebar">
-      <div class="brand"><span class="brand-mark"></span><span>HISSUK Center</span></div>
+      <div class="brand"><span class="brand-mark"></span><span>E-Mengaji</span></div>
       <div class="sidebar-user">
         <div class="avatar" id="parentAvatar">N</div>
         <div><div class="name" id="parentName">Ibu Bapa</div><div class="role">Ibu Bapa</div></div>
@@ -773,10 +781,11 @@ input:checked + .slider-tog:before{transform:translateX(18px);}
 
 <script>
 /* =========================================================
-   HISSUK CENTER — APP LOGIC
-   Asas sistem: Firebase Authentication + Firestore.
-   Data demo masih digunakan sebagai seed awal, tetapi identiti pengguna
-   production datang daripada Firebase Auth dan dokumen users/{uid}.
+   E-MENGAJI — APP LOGIC
+   Nota: Semua data disimpan dalam localStorage sebagai simulasi
+   backend. Untuk produksi sebenar, gantikan loadData()/saveData()
+   dan semua fungsi CRUD dengan panggilan API kepada backend/pangkalan
+   data sebenar, dan tambah pengesahan (auth) token yang selamat.
    ========================================================= */
 
 const LOGO_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>';
@@ -908,11 +917,11 @@ var PERSISTED_STATE_KEYS = ['students','teachers','classes','attendance','readin
 
 // Nilai lalai untuk tetapan sistem (bukan array) - appState.settings
 var DEFAULT_SETTINGS = {
-  centerName: 'HISSUK Center',
+  centerName: 'Pusat Pengajian Al-Quran E-Mengaji',
   defaultFee: 60,
   bankName: 'Maybank',
   bankAccountNumber: '',
-  bankAccountHolder: 'HISSUK Center',
+  bankAccountHolder: 'Pusat Pengajian Al-Quran E-Mengaji',
   whatsappReceiptNumber: '0173311580'
 };
 
@@ -924,7 +933,7 @@ function ensureStateDefaults(state){
 }
 
 function loadLocalData(){
-  var raw = localStorage.getItem('hissukCenter_data');
+  var raw = localStorage.getItem('emengaji_data');
   if(raw){
     try{ appState = JSON.parse(raw); }catch(e){ appState = generateSeedData(); }
   } else {
@@ -936,25 +945,17 @@ function loadLocalData(){
 async function loadData(){
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
     try{
-      var docRef = fbDB.collection('hissukCenter').doc('mainData');
+      var docRef = fbDB.collection('emengaji').doc('mainData');
       var snap = await docRef.get();
       if(snap.exists){
         appState = snap.data();
         ensureStateDefaults(appState);
       } else {
-        // Migrasi sekali sahaja daripada struktur lama Claude AI: emengaji/mainData
-        var legacyRef = fbDB.collection('emengaji').doc('mainData');
-        var legacySnap = await legacyRef.get();
-        if(legacySnap.exists){
-          appState = legacySnap.data();
-          ensureStateDefaults(appState);
-          await docRef.set(appState);
-          console.info('Data lama E-Mengaji telah dimigrasikan ke HISSUK Center.');
-        }else{
-          appState = generateSeedData();
-          await docRef.set(appState);
-        }
+        appState = generateSeedData();
+        await docRef.set(appState);
       }
+      // Dengar perubahan masa nyata - bila admin/guru lain simpan data,
+      // peranti ini akan terima kemaskini automatik tanpa refresh.
       docRef.onSnapshot(function(liveSnap){
         if(liveSnap.exists && liveSnap.metadata.hasPendingWrites === false){
           var cu = appState.currentUser;
@@ -972,17 +973,18 @@ async function loadData(){
     loadLocalData();
   }
   ensureStateDefaults(appState);
-  await restoreFirebaseSession();
+  var savedUser = sessionStorage.getItem('emengaji_user');
+  appState.currentUser = savedUser? JSON.parse(savedUser): null;
 }
 
 async function saveData(){
   var toSave = {};
   PERSISTED_STATE_KEYS.forEach(function(k){ toSave[k] = appState[k]; });
   toSave.settings = appState.settings;
-  localStorage.setItem('hissukCenter_data', JSON.stringify(toSave));
+  localStorage.setItem('emengaji_data', JSON.stringify(toSave));
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
     try{
-      await fbDB.collection('hissukCenter').doc('mainData').set(toSave);
+      await fbDB.collection('emengaji').doc('mainData').set(toSave);
     }catch(e){
       console.error('Gagal simpan ke Firestore (data hanya tersimpan tempatan buat masa ini):', e);
       toast('Amaran: gagal sync ke server. Semak sambungan internet.', 'error');
@@ -990,7 +992,7 @@ async function saveData(){
   }
 }
 function resetDemoData(){
-  localStorage.removeItem('hissukCenter_data');
+  localStorage.removeItem('emengaji_data');
   var user = appState.currentUser;
   appState = generateSeedData();
   appState.currentUser = user;
@@ -1026,35 +1028,31 @@ function confirmAction(msg, onConfirm){
   document.getElementById('confirmBtn').onclick = function(){ onConfirm(); closeModal(); };
 }
 
-/* ---------- AUTH: FIREBASE AUTH + USERS/{uid} ---------- */
-var ALLOWED_ROLES = ['admin','guru','parent'];
-
-function normalizeUserProfile(uid, email, profile){
-  profile = profile || {};
-  return {
-    uid: uid,
-    email: email || profile.email || '',
-    role: profile.role || '',
-    name: profile.name || email || 'Pengguna',
-    id: profile.teacherId || profile.parentId || profile.entityId || uid,
-    teacherId: profile.teacherId || null,
-    parentId: profile.parentId || null,
-    guardianName: profile.guardianName || null,
-    active: profile.active !== false
-  };
+/* ---------- AUTH ---------- */
+var DEMO_ACCOUNTS = {
+  'admin@emengaji.test': {password:'admin123', role:'admin', name:'Admin', id:'admin1'},
+  'guru@emengaji.test': {password:'guru123', role:'guru', name:'Ustaz Ahmad', id:'t1'},
+  'parent@emengaji.test': {password:'parent123', role:'parent', name:'Nurul Huda', id:'p1', guardianName:'Nurul Huda'},
+  // Akaun sebenar yang didaftarkan dalam Firebase Authentication:
+  'syakirassofi96@gmail.com': {password:'', role:'admin', name:'Admin', id:'admin1'},
+  // Ibu bapa: guardianName MESTI sama persis dengan "Nama Penjaga" pada rekod pelajar
+  'aidaafiqah@hissuk.com': {password:'', role:'parent', name:'Aida Afiqah', id:'p2', guardianName:'Aida Afiqah'},
+  // Guru: id di bawah PERLU ditukar selepas guru ditambah dalam Admin > Guru (lihat arahan)
+  'ustazsyakir@hissuk.com': {password:'', role:'guru', name:'Ustaz Syakir', id:'GANTI_DENGAN_ID_SEBENAR'}
+};
+function fillDemo(kind){
+  var map = {admin:'admin@emengaji.test', guru:'guru@emengaji.test', parent:'parent@emengaji.test'};
+  var acc = DEMO_ACCOUNTS[map[kind]];
+  document.getElementById('loginEmail').value = map[kind];
+  document.getElementById('loginPass').value = acc.password;
 }
+function clearFieldError(id){ var f=document.getElementById(id); if(f) f.classList.remove('has-error'); }
+function setFieldError(id){ var f=document.getElementById(id); if(f) f.classList.add('has-error'); }
 
-async function getCurrentUserProfile(firebaseUser){
-  if(!firebaseUser) return null;
-  var ref = fbDB.collection('users').doc(firebaseUser.uid);
-  var snap = await ref.get();
-  if(!snap.exists){
-    throw new Error('USER_PROFILE_NOT_FOUND');
-  }
-  var profile = normalizeUserProfile(firebaseUser.uid, firebaseUser.email, snap.data());
-  if(!profile.active) throw new Error('USER_INACTIVE');
-  if(ALLOWED_ROLES.indexOf(profile.role)===-1) throw new Error('INVALID_ROLE');
-  return profile;
+function redirectByRole(role){
+  if(role==='admin') go('/admin/dashboard');
+  else if(role==='guru') go('/teacher/dashboard');
+  else go('/parent/dashboard');
 }
 
 async function handleLogin(e){
@@ -1067,56 +1065,44 @@ async function handleLogin(e){
   if(!pass){ setFieldError('loginPassField'); ok=false; }
   if(!ok) return false;
 
-  if(typeof FIREBASE_ENABLED === 'undefined' || !FIREBASE_ENABLED){
-    toast('Firebase belum diaktifkan. Sila sambungkan Firebase untuk log masuk.', 'error');
+  if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
+    try{
+      await fbAuth.signInWithEmailAndPassword(email, pass);
+      // Peranan (admin/guru/ibu bapa) masih dirujuk dari senarai DEMO_ACCOUNTS
+      // dalam kod ini. TAMBAH baris baharu dalam DEMO_ACCOUNTS setiap kali
+      // admin daftar akaun baharu dalam Firebase Authentication.
+      var acc = DEMO_ACCOUNTS[email];
+      if(!acc){
+        toast('Log masuk Firebase berjaya, tetapi peranan akaun ini belum didaftarkan dalam kod. Hubungi admin sistem.', 'error');
+        await fbAuth.signOut();
+        return false;
+      }
+      appState.currentUser = {email:email, role:acc.role, name:acc.name, id:acc.id, guardianName:acc.guardianName||null};
+      sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
+      toast('Log masuk berjaya. Selamat kembali, '+acc.name+'!');
+      redirectByRole(acc.role);
+    }catch(err){
+      console.error(err);
+      toast('Email atau kata laluan tidak sah.', 'error');
+    }
     return false;
   }
 
-  try{
-    var credential = await fbAuth.signInWithEmailAndPassword(email, pass);
-    var profile = await getCurrentUserProfile(credential.user);
-    appState.currentUser = profile;
-    sessionStorage.setItem('hissukCenter_user', JSON.stringify(profile));
-    toast('Log masuk berjaya. Selamat kembali, '+profile.name+'!');
-    redirectByRole(profile.role);
-  }catch(err){
-    console.error(err);
-    if(err.message==='USER_PROFILE_NOT_FOUND'){
-      toast('Akaun Firebase wujud tetapi profil pengguna belum disediakan oleh admin.', 'error');
-    }else if(err.message==='USER_INACTIVE'){
-      toast('Akaun anda tidak aktif. Sila hubungi pentadbir HISSUK Center.', 'error');
-    }else if(err.message==='INVALID_ROLE'){
-      toast('Role akaun tidak sah. Sila hubungi pentadbir HISSUK Center.', 'error');
-    }else{
-      toast('Email atau kata laluan tidak sah.', 'error');
-    }
+  // Mod tanpa Firebase (sandaran/ujian sahaja)
+  var acc2 = DEMO_ACCOUNTS[email];
+  if(!acc2 || acc2.password !== pass){
+    toast('Email atau kata laluan tidak sah. Sila cuba akaun demo.', 'error');
+    return false;
   }
+  appState.currentUser = {email:email, role:acc2.role, name:acc2.name, id:acc2.id, guardianName:acc2.guardianName||null};
+  sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
+  toast('Log masuk berjaya. Selamat kembali, '+acc2.name+'!');
+  redirectByRole(acc2.role);
   return false;
 }
-
-async function restoreFirebaseSession(){
-  if(typeof FIREBASE_ENABLED === 'undefined' || !FIREBASE_ENABLED || !fbAuth.currentUser){
-    appState.currentUser = null;
-    sessionStorage.removeItem('hissukCenter_user');
-    return null;
-  }
-  try{
-    var profile = await getCurrentUserProfile(fbAuth.currentUser);
-    appState.currentUser = profile;
-    sessionStorage.setItem('hissukCenter_user', JSON.stringify(profile));
-    return profile;
-  }catch(err){
-    console.error('Gagal memulihkan profil Firebase:', err);
-    appState.currentUser = null;
-    sessionStorage.removeItem('hissukCenter_user');
-    try{ await fbAuth.signOut(); }catch(e){}
-    return null;
-  }
-}
-
 function logout(){
   appState.currentUser = null;
-  sessionStorage.removeItem('hissukCenter_user');
+  sessionStorage.removeItem('emengaji_user');
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED && fbAuth){
     fbAuth.signOut().catch(function(){});
   }
@@ -1297,7 +1283,7 @@ var ADMIN_TITLES = {
   pendaftaran:['Pendaftaran Online','Semak dan luluskan permohonan baru'], cuti:['Permohonan Cuti Guru','Semak permohonan cuti dan cari pengganti'], kehadiran:['Rekod Kehadiran','Lihat kehadiran mengikut kelas dan tarikh'],
   bacaan:['Rekod Bacaan','Pantau kemajuan bacaan semua pelajar'], yuran:['Pengurusan Yuran','Jejak kutipan dan tunggakan yuran'],
   laporan:['Laporan','Jana laporan bulanan pelajar'], notifikasi:['Notifikasi','Kemaskini terkini sistem'],
-  pengumuman:['Pengumuman','Urus pengumuman untuk guru dan ibu bapa'], tetapan:['Tetapan Sistem','Konfigurasi am sistem HISSUK Center']
+  pengumuman:['Pengumuman','Urus pengumuman untuk guru dan ibu bapa'], tetapan:['Tetapan Sistem','Konfigurasi am sistem E-Mengaji']
 };
 
 function renderAdmin(section){
@@ -1348,7 +1334,7 @@ function renderAdminDashboard(c){
     html += '<h4 style="font-size:15px;color:var(--danger);margin-bottom:8px;">Amaran: '+teachersOnLeaveToday.length+' guru bercuti hari ini</h4>';
     teachersOnLeaveToday.forEach(function(t){
       var clsToday = appState.classes.filter(function(cl){return cl.teacherId===t.id;});
-      html += '<div style="font-size:13.5px;margin-bottom:6px;"><strong>'+t.name+'</strong> &mdash; kelas perlu pengganti: '+(clsToday.length? clsToday.map(function(cl){return cl.name;}).join(', ') : 'Tiada kelas hari ini')+'</div>';
+      html += '<div style="font-size:13.5px;margin-bottom:6px;"><strong>'+esc(t.name)+'</strong> &mdash; kelas perlu pengganti: '+(clsToday.length? clsToday.map(function(cl){return esc(cl.name);}).join(', ') : 'Tiada kelas hari ini')+'</div>';
     });
     html += "<button class='btn btn-danger btn-sm' style='margin-top:6px;' onclick=\"go('/admin/cuti')\">Urus Cuti Guru</button>";
     html += '</div></div>';
@@ -1377,7 +1363,7 @@ function renderAdminDashboard(c){
 
   html += '<div class="two-col">';
   html += '<div class="card"><div class="panel-head"><h3>Pendaftaran Terbaru</h3><a href="#/admin/pendaftaran">Lihat semua &rarr;</a></div><div class="table-wrap"><table><thead><tr><th>Nama Ibu Bapa</th><th>Nama Anak</th><th>Tarikh</th><th>Status</th></tr></thead><tbody>';
-  html += appState.registrations.slice(0,5).map(function(r){ return '<tr><td>'+r.guardianName+'</td><td>'+r.childName+'</td><td>'+fmtDate(r.submittedAt)+'</td><td>'+statusBadge(r.status)+'</td></tr>'; }).join('') || emptyRow(4);
+  html += appState.registrations.slice(0,5).map(function(r){ return '<tr><td>'+esc(r.guardianName)+'</td><td>'+esc(r.childName)+'</td><td>'+fmtDate(r.submittedAt)+'</td><td>'+statusBadge(r.status)+'</td></tr>'; }).join('') || emptyRow(4);
   html += '</tbody></table></div></div>';
 
   html += '<div class="card"><div class="panel-head"><h3>Kelas Hari Ini</h3></div><div class="table-wrap"><table><thead><tr><th>Kelas</th><th>Masa</th><th>Guru</th><th>Hadir</th></tr></thead><tbody>';
@@ -1386,7 +1372,7 @@ function renderAdminDashboard(c){
     var todays = appState.attendance.filter(function(a){return a.classId===cl.id && a.date===todayISO();});
     var h = todays.filter(function(a){return a.status==='Hadir'||a.status==='Lewat';}).length;
     var dotColor = todays.length? (h/todays.length>0.7?'var(--emerald)':'var(--warning)') : 'var(--muted)';
-    return '<tr><td>'+cl.name+'</td><td>'+cl.time+'</td><td>'+(t?t.name:'-')+'</td><td><span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:'+dotColor+';display:inline-block;"></span>'+h+'/'+(todays.length||'-')+'</span></td></tr>';
+    return '<tr><td>'+esc(cl.name)+'</td><td>'+esc(cl.time)+'</td><td>'+(t?esc(t.name):'-')+'</td><td><span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:'+dotColor+';display:inline-block;"></span>'+h+'/'+(todays.length||'-')+'</span></td></tr>';
   }).join('');
   html += '</tbody></table></div></div>';
   html += '</div>';
@@ -1409,7 +1395,7 @@ function renderAdminDashboard(c){
 /* ---- Admin: Students ---- */
 var studentFilters = {search:'', classId:'', level:'', status:''};
 function renderAdminStudents(c){
-  var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'">'+cl.name+'</option>'; }).join('');
+  var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'">'+esc(cl.name)+'</option>'; }).join('');
   var levelOpts = LEVELS.map(function(l){ return '<option value="'+l+'">'+l+'</option>'; }).join('');
   c.innerHTML =
   '<div class="toolbar"><div class="toolbar-filters">'+
@@ -1435,10 +1421,10 @@ function renderStudentTable(){
   body.innerHTML = list.map(function(s){
     var cl = classById(s.classId);
     return '<tr>'+
-      '<td><div style="display:flex;align-items:center;gap:10px;"><div class="avatar" style="background:'+s.avatarColor+';width:32px;height:32px;font-size:12px;">'+initials(s.fullName)+'</div><div><div style="font-weight:600;">'+s.fullName+'</div><div style="font-size:12px;color:var(--muted);">'+s.nickname+'</div></div></div></td>'+
-      '<td>'+(cl?cl.name:'-')+'</td>'+
+      '<td><div style="display:flex;align-items:center;gap:10px;"><div class="avatar" style="background:'+s.avatarColor+';width:32px;height:32px;font-size:12px;">'+initials(s.fullName)+'</div><div><div style="font-weight:600;">'+esc(s.fullName)+'</div><div style="font-size:12px;color:var(--muted);">'+esc(s.nickname)+'</div></div></div></td>'+
+      '<td>'+(cl?esc(cl.name):'-')+'</td>'+
       '<td>'+levelBadge(s.level)+'</td>'+
-      '<td>'+s.guardianName+'<br><span style="font-size:12px;color:var(--muted);">'+s.guardianPhone+'</span></td>'+
+      '<td>'+esc(s.guardianName)+'<br><span style="font-size:12px;color:var(--muted);">'+esc(s.guardianPhone)+'</span></td>'+
       '<td>'+statusBadge(s.status)+'</td>'+
       '<td><div class="row-actions">'+
         '<button class="icon-action" title="Lihat" onclick="viewStudentProfile(\''+s.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>'+
@@ -1449,13 +1435,13 @@ function renderStudentTable(){
 }
 function openStudentForm(id){
   var s = id? studentById(id) : null;
-  var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'" '+(s&&s.classId===cl.id?'selected':'')+'>'+cl.name+'</option>'; }).join('');
+  var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'" '+(s&&s.classId===cl.id?'selected':'')+'>'+esc(cl.name)+'</option>'; }).join('');
   var levelOpts = LEVELS.map(function(l){ return '<option '+(s&&s.level===l?'selected':'')+'>'+l+'</option>'; }).join('');
   var defaultFee = (appState.settings && appState.settings.defaultFee) || 60;
   var body =
-  '<div class="input-row"><div class="field"><label>Nama Penuh</label><input type="text" id="fFullName" value="'+(s?s.fullName:'')+'"></div><div class="field"><label>Nama Panggilan</label><input type="text" id="fNickname" value="'+(s?s.nickname:'')+'"></div></div>'+
+  '<div class="input-row"><div class="field"><label>Nama Penuh</label><input type="text" id="fFullName" value="'+(s?esc(s.fullName):'')+'"></div><div class="field"><label>Nama Panggilan</label><input type="text" id="fNickname" value="'+(s?esc(s.nickname):'')+'"></div></div>'+
   '<div class="input-row"><div class="field"><label>Tarikh Lahir</label><input type="date" id="fDob" value="'+(s?s.dob:'')+'"></div><div class="field"><label>Tarikh Mula</label><input type="date" id="fStartDate" value="'+(s?s.startDate:todayISO())+'"></div></div>'+
-  '<div class="input-row"><div class="field"><label>Nama Penjaga</label><input type="text" id="fGuardianName" value="'+(s?s.guardianName:'')+'"></div><div class="field"><label>Nombor Telefon Penjaga</label><input type="tel" id="fGuardianPhone" value="'+(s?s.guardianPhone:'')+'"></div></div>'+
+  '<div class="input-row"><div class="field"><label>Nama Penjaga</label><input type="text" id="fGuardianName" value="'+(s?esc(s.guardianName):'')+'"></div><div class="field"><label>Nombor Telefon Penjaga</label><input type="tel" id="fGuardianPhone" value="'+(s?esc(s.guardianPhone):'')+'"></div></div>'+
   '<div class="input-row"><div class="field"><label>Kelas</label><select id="fClassId">'+classOpts+'</select></div><div class="field"><label>Tahap Mengaji</label><select id="fLevel">'+levelOpts+'</select></div></div>'+
   '<div class="input-row"><div class="field"><label>Status</label><select id="fStatus"><option '+(s&&s.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(s&&s.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>'+
   '<div class="field"><label>Yuran Bulanan (RM)</label><input type="number" id="fMonthlyFee" value="'+(s&&s.monthlyFee!=null?s.monthlyFee:defaultFee)+'" min="0" step="1"><span class="hint">Bulan semasa akan dikemaskini automatik untuk ibu bapa bila disimpan.</span></div></div>';
@@ -1488,12 +1474,12 @@ function saveStudentForm(id){
   if(id){ var s = studentById(id); for(var k in data){ s[k]=data[k]; } toast('Maklumat pelajar dikemaskini.'); }
   else { data.id = uid('s'); studentIdToUse = data.id; data.avatarColor = ['#047857','#c9a227','#0f766e','#b45309'][appState.students.length%4]; appState.students.push(data); toast('Pelajar baharu berjaya ditambah.'); }
   upsertCurrentMonthFee(studentIdToUse, monthlyFee);
-  pushNotification('Yuran bulanan '+fullName+' ditetapkan kepada RM'+monthlyFee+'.');
+  pushNotification('Yuran bulanan '+esc(fullName)+' ditetapkan kepada RM'+monthlyFee+'.');
   saveData(); closeModal(); renderStudentTable();
 }
 function deleteStudentConfirm(id){
   var s = studentById(id);
-  confirmAction('Padam pelajar <strong>'+s.fullName+'</strong>? Tindakan ini tidak boleh dibatalkan.', function(){
+  confirmAction('Padam pelajar <strong>'+esc(s.fullName)+'</strong>? Tindakan ini tidak boleh dibatalkan.', function(){
     appState.students = appState.students.filter(function(x){return x.id!==id;});
     saveData(); renderStudentTable(); toast('Pelajar telah dipadam.');
   });
@@ -1504,11 +1490,11 @@ function viewStudentProfile(id){
   var reads = appState.readingRecords.filter(function(r){return r.studentId===id;}).sort(function(a,b){return b.date.localeCompare(a.date);});
   var latest = reads[0];
   var body =
-  '<div style="display:flex;gap:14px;align-items:center;margin-bottom:20px;"><div class="avatar" style="width:56px;height:56px;font-size:18px;background:'+s.avatarColor+';">'+initials(s.fullName)+'</div><div><h3 style="font-size:18px;">'+s.fullName+'</h3><p style="font-size:13px;color:var(--muted);">'+(cl?cl.name:'-')+' &middot; Guru: '+(t?t.name:'-')+'</p></div></div>'+
+  '<div style="display:flex;gap:14px;align-items:center;margin-bottom:20px;"><div class="avatar" style="width:56px;height:56px;font-size:18px;background:'+s.avatarColor+';">'+initials(s.fullName)+'</div><div><h3 style="font-size:18px;">'+esc(s.fullName)+'</h3><p style="font-size:13px;color:var(--muted);">'+(cl?esc(cl.name):'-')+' &middot; Guru: '+(t?esc(t.name):'-')+'</p></div></div>'+
   '<div class="report-grid"><div class="report-block"><h5>Maklumat Peribadi</h5>'+
   '<div class="kv"><span>Tarikh Lahir</span><span>'+fmtDate(s.dob)+'</span></div>'+
-  '<div class="kv"><span>Nama Penjaga</span><span>'+s.guardianName+'</span></div>'+
-  '<div class="kv"><span>No. Telefon</span><span>'+s.guardianPhone+'</span></div>'+
+  '<div class="kv"><span>Nama Penjaga</span><span>'+esc(s.guardianName)+'</span></div>'+
+  '<div class="kv"><span>No. Telefon</span><span>'+esc(s.guardianPhone)+'</span></div>'+
   '<div class="kv"><span>Tarikh Mula</span><span>'+fmtDate(s.startDate)+'</span></div>'+
   '<div class="kv"><span>Status</span><span>'+statusBadge(s.status)+'</span></div></div>'+
   '<div class="report-block"><h5>Perkembangan</h5>'+
@@ -1533,11 +1519,11 @@ function renderAdminTeachers(c){
     var clsNames = appState.classes.filter(function(c){return c.teacherId===t.id;}).map(function(c){return c.name;});
     var studentCount = studentsOfTeacher(t.id).length;
     var days = t.days || [];
-    var bankInfo = t.bankName ? (t.bankName+' - '+(t.bankAccount||'-')) : '-';
+    var bankInfo = t.bankName ? (esc(t.bankName)+' - '+esc(t.bankAccount||'-')) : '-';
     return '<div class="card card-pad"><div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
-      '<div style="display:flex;gap:12px;align-items:center;"><div class="avatar" style="background:var(--emerald);width:44px;height:44px;">'+initials(t.name)+'</div><div><div style="font-weight:700;">'+t.name+'</div><div style="font-size:12.5px;color:var(--muted);">'+t.email+'</div></div></div>'+statusBadge(t.status)+
-      '</div><div style="margin:16px 0;font-size:13px;color:var(--muted);">Kelas: '+(clsNames.join(', ')||'-')+'</div>'+
-      '<div style="margin-bottom:10px;font-size:13px;color:var(--muted);">Hari Mengajar: '+(days.length? days.map(function(d){return '<span class="badge badge-green" style="margin-right:4px;">'+d+'</span>';}).join('') : '<span style="color:var(--muted);">Belum ditetapkan</span>')+'</div>'+
+      '<div style="display:flex;gap:12px;align-items:center;"><div class="avatar" style="background:var(--emerald);width:44px;height:44px;">'+initials(t.name)+'</div><div><div style="font-weight:700;">'+esc(t.name)+'</div><div style="font-size:12.5px;color:var(--muted);">'+esc(t.email)+'</div></div></div>'+statusBadge(t.status)+
+      '</div><div style="margin:16px 0;font-size:13px;color:var(--muted);">Kelas: '+(esc(clsNames.join(', '))||'-')+'</div>'+
+      '<div style="margin-bottom:10px;font-size:13px;color:var(--muted);">Hari Mengajar: '+(days.length? days.map(function(d){return '<span class="badge badge-green" style="margin-right:4px;">'+esc(d)+'</span>';}).join('') : '<span style="color:var(--muted);">Belum ditetapkan</span>')+'</div>'+
       '<div style="margin-bottom:14px;font-size:13px;color:var(--muted);">Akaun Bank: '+bankInfo+'</div>'+
       '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:14px;"><span>Jumlah Pelajar</span><strong>'+studentCount+'</strong></div>'+
       '<div class="row-actions"><button class="btn btn-outline btn-sm btn-block" onclick="openTeacherForm(\''+t.id+'\')">Sunting</button><button class="btn btn-ghost btn-sm" onclick="sendWhatsApp(\''+t.phone+'\',\'Assalamualaikum Ustaz/Ustazah, mesyuarat guru akan diadakan tidak lama lagi.\')">'+iconSvg('whatsapp')+'</button></div></div>';
@@ -1551,11 +1537,11 @@ function openTeacherForm(id){
     return '<label style="display:inline-flex;align-items:center;gap:6px;margin:0 12px 8px 0;font-size:13px;font-weight:500;"><input type="checkbox" class="tDayCheck" value="'+d+'" '+checked+' style="width:auto;">'+d+'</label>';
   }).join('');
   var body =
-  '<div class="field"><label>Nama Penuh</label><input type="text" id="tFullName" value="'+(t?t.name:'')+'"></div>'+
-  '<div class="input-row"><div class="field"><label>Email</label><input type="email" id="tEmail" value="'+(t?t.email:'')+'"></div><div class="field"><label>No. Telefon</label><input type="tel" id="tPhone" value="'+(t?t.phone:'')+'"></div></div>'+
+  '<div class="field"><label>Nama Penuh</label><input type="text" id="tFullName" value="'+(t?esc(t.name):'')+'"></div>'+
+  '<div class="input-row"><div class="field"><label>Email</label><input type="email" id="tEmail" value="'+(t?esc(t.email):'')+'"></div><div class="field"><label>No. Telefon</label><input type="tel" id="tPhone" value="'+(t?esc(t.phone):'')+'"></div></div>'+
   '<div class="field"><label>Status</label><select id="tStatus"><option '+(t&&t.status==='Aktif'?'selected':'')+'>Aktif</option><option '+(t&&t.status==='Tidak Aktif'?'selected':'')+'>Tidak Aktif</option></select></div>'+
   '<div class="field"><label>Hari Mengajar</label><div>'+dayChecks+'</div><span class="hint">Pilih hari-hari guru ini mengajar untuk susun jadual.</span></div>'+
-  '<div class="input-row"><div class="field"><label>Nama Bank</label><input type="text" id="tBankName" value="'+(t&&t.bankName?t.bankName:'')+'" placeholder="Contoh: Maybank"></div><div class="field"><label>No. Akaun Bank</label><input type="text" id="tBankAccount" value="'+(t&&t.bankAccount?t.bankAccount:'')+'" placeholder="Contoh: 1234567890"></div></div>';
+  '<div class="input-row"><div class="field"><label>Nama Bank</label><input type="text" id="tBankName" value="'+(t&&t.bankName?esc(t.bankName):'')+'" placeholder="Contoh: Maybank"></div><div class="field"><label>No. Akaun Bank</label><input type="text" id="tBankAccount" value="'+(t&&t.bankAccount?esc(t.bankAccount):'')+'" placeholder="Contoh: 1234567890"></div></div>';
   openModal(t?'Sunting Guru':'Tambah Guru', body, '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveTeacherForm('+(t?"'"+t.id+"'":'null')+')">Simpan</button>');
 }
 function saveTeacherForm(id){
@@ -1579,9 +1565,9 @@ function renderAdminClasses(c){
   grid.innerHTML = appState.classes.map(function(cl){
     var t = teacherById(cl.teacherId);
     var count = appState.students.filter(function(s){return s.classId===cl.id && s.status==='Aktif';}).length;
-    return '<div class="card card-pad"><div style="display:flex;justify-content:space-between;"><h4 style="font-size:16px;">'+cl.name+'</h4>'+levelBadge(cl.level)+'</div>'+
-    '<p style="font-size:13px;color:var(--muted);margin-top:6px;">'+cl.time+'</p>'+
-    '<div style="margin-top:14px;font-size:13px;">Guru: <strong>'+(t?t.name:'-')+'</strong></div>'+
+    return '<div class="card card-pad"><div style="display:flex;justify-content:space-between;"><h4 style="font-size:16px;">'+esc(cl.name)+'</h4>'+levelBadge(cl.level)+'</div>'+
+    '<p style="font-size:13px;color:var(--muted);margin-top:6px;">'+esc(cl.time)+'</p>'+
+    '<div style="margin-top:14px;font-size:13px;">Guru: <strong>'+(t?esc(t.name):'-')+'</strong></div>'+
     '<div style="margin-top:6px;font-size:13px;">Pelajar: <strong>'+count+'/'+cl.capacity+'</strong></div>'+
     '<div class="progress"><div style="width:'+Math.min(100,count/cl.capacity*100)+'%;"></div></div>'+
     '<button class="btn btn-outline btn-sm btn-block" style="margin-top:14px;" onclick="openClassForm(\''+cl.id+'\')">Sunting</button></div>';
@@ -1589,11 +1575,11 @@ function renderAdminClasses(c){
 }
 function openClassForm(id){
   var cl = id? classById(id): null;
-  var teacherOpts = appState.teachers.map(function(t){ return '<option value="'+t.id+'" '+(cl&&cl.teacherId===t.id?'selected':'')+'>'+t.name+'</option>'; }).join('');
+  var teacherOpts = appState.teachers.map(function(t){ return '<option value="'+t.id+'" '+(cl&&cl.teacherId===t.id?'selected':'')+'>'+esc(t.name)+'</option>'; }).join('');
   var body =
-  '<div class="field"><label>Nama Kelas</label><input type="text" id="cName" value="'+(cl?cl.name:'')+'"></div>'+
-  '<div class="input-row"><div class="field"><label>Masa</label><input type="text" id="cTime" value="'+(cl?cl.time:'')+'" placeholder="Contoh: 8:00 - 9:00 malam"></div><div class="field"><label>Kapasiti</label><input type="number" id="cCapacity" value="'+(cl?cl.capacity:20)+'"></div></div>'+
-  '<div class="input-row"><div class="field"><label>Tahap</label><input type="text" id="cLevel" value="'+(cl?cl.level:'')+'"></div><div class="field"><label>Guru</label><select id="cTeacher">'+teacherOpts+'</select></div></div>';
+  '<div class="field"><label>Nama Kelas</label><input type="text" id="cName" value="'+(cl?esc(cl.name):'')+'"></div>'+
+  '<div class="input-row"><div class="field"><label>Masa</label><input type="text" id="cTime" value="'+(cl?esc(cl.time):'')+'" placeholder="Contoh: 8:00 - 9:00 malam"></div><div class="field"><label>Kapasiti</label><input type="number" id="cCapacity" value="'+(cl?cl.capacity:20)+'"></div></div>'+
+  '<div class="input-row"><div class="field"><label>Tahap</label><input type="text" id="cLevel" value="'+(cl?esc(cl.level):'')+'"></div><div class="field"><label>Guru</label><select id="cTeacher">'+teacherOpts+'</select></div></div>';
   openModal(cl?'Sunting Kelas':'Tambah Kelas', body, '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveClassForm('+(cl?"'"+cl.id+"'":'null')+')">Simpan</button>');
 }
 function saveClassForm(id){
@@ -1634,35 +1620,40 @@ function renderRegTable(status){
       actions += '<button class="icon-action" title="Luluskan" onclick="approveRegistration(\''+r.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg></button>'+
       '<button class="icon-action danger" title="Tolak" onclick="rejectRegistration(\''+r.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
     }
-    return '<tr><td>'+r.childName+'</td><td>'+r.guardianName+'</td><td>'+r.phone+'</td><td>'+levelBadge(r.level)+'</td><td>'+(cl?cl.name:'-')+'</td><td>'+fmtDate(r.submittedAt)+'</td><td><div class="row-actions">'+actions+'</div></td></tr>';
+    return '<tr><td>'+esc(r.childName)+'</td><td>'+esc(r.guardianName)+'</td><td>'+esc(r.phone)+'</td><td>'+levelBadge(r.level)+'</td><td>'+(cl?esc(cl.name):'-')+'</td><td>'+fmtDate(r.submittedAt)+'</td><td><div class="row-actions">'+actions+'</div></td></tr>';
   }).join('');
 }
 function viewRegistration(id){
   var r = appState.registrations.filter(function(x){return x.id===id;})[0];
   var cl = classById(r.classPreference);
   openModal('Butiran Pendaftaran', '<div class="report-block">'+
-    '<div class="kv"><span>Nama Anak</span><span>'+r.childName+'</span></div>'+
+    '<div class="kv"><span>Nama Anak</span><span>'+esc(r.childName)+'</span></div>'+
     '<div class="kv"><span>Tarikh Lahir</span><span>'+fmtDate(r.dob)+'</span></div>'+
-    '<div class="kv"><span>Nama Penjaga</span><span>'+r.guardianName+'</span></div>'+
-    '<div class="kv"><span>No. WhatsApp</span><span>'+r.phone+'</span></div>'+
-    '<div class="kv"><span>Tahap Mengaji</span><span>'+r.level+'</span></div>'+
-    '<div class="kv"><span>Kelas Pilihan</span><span>'+(cl?cl.name:'-')+'</span></div>'+
+    '<div class="kv"><span>Nama Penjaga</span><span>'+esc(r.guardianName)+'</span></div>'+
+    '<div class="kv"><span>No. WhatsApp</span><span>'+esc(r.phone)+'</span></div>'+
+    '<div class="kv"><span>Tahap Mengaji</span><span>'+esc(r.level)+'</span></div>'+
+    '<div class="kv"><span>Kelas Pilihan</span><span>'+(cl?esc(cl.name):'-')+'</span></div>'+
     '<div class="kv"><span>Status</span><span>'+statusBadge(r.status)+'</span></div></div>'+
-    (r.notes? '<p style="margin-top:14px;font-size:13.5px;"><strong>Catatan:</strong> '+r.notes+'</p>':''),
+    (r.notes? '<p style="margin-top:14px;font-size:13.5px;"><strong>Catatan:</strong> '+esc(r.notes)+'</p>':''),
   '<button class="btn btn-ghost" onclick="closeModal()">Tutup</button>');
 }
 function approveRegistration(id){
   var r = appState.registrations.filter(function(x){return x.id===id;})[0];
-  confirmAction('Luluskan pendaftaran <strong>'+r.childName+'</strong>? Rekod pelajar baharu akan dicipta secara automatik.', function(){
+  confirmAction('Luluskan pendaftaran <strong>'+esc(r.childName)+'</strong>? Rekod pelajar baharu akan dicipta secara automatik.', function(){
     r.status='Approved';
-    var cl = classById(r.classPreference) || appState.classes[0];
+    var cl = classById(r.classPreference);
+    var usedFallback = false;
+    if(!cl){ cl = appState.classes[0]; usedFallback = true; }
+    if(!cl){ toast('Ralat: tiada kelas wujud dalam sistem. Sila cipta kelas dahulu sebelum luluskan pendaftaran.', 'error'); return; }
     appState.students.push({id:uid('s'), fullName:r.childName, nickname:r.childName.split(' ')[0], dob:r.dob, guardianName:r.guardianName, guardianPhone:r.phone, classId:cl.id, teacherId:cl.teacherId, level:r.level, startDate:todayISO(), status:'Aktif', avatarColor:'#047857'});
-    saveData(); renderAdminRegistrations(document.getElementById('adminContent')); toast('Pendaftaran diluluskan & rekod pelajar dicipta.');
+    saveData(); renderAdminRegistrations(document.getElementById('adminContent'));
+    if(usedFallback){ toast('Pendaftaran diluluskan. AMARAN: kelas pilihan asal tidak dijumpai, pelajar diletakkan sementara di kelas "'+esc(cl.name)+'" - sila semak & betulkan di Pengurusan Pelajar.', 'warn'); }
+    else { toast('Pendaftaran diluluskan & rekod pelajar dicipta.'); }
   });
 }
 function rejectRegistration(id){
   var r = appState.registrations.filter(function(x){return x.id===id;})[0];
-  confirmAction('Tolak pendaftaran <strong>'+r.childName+'</strong>?', function(){
+  confirmAction('Tolak pendaftaran <strong>'+esc(r.childName)+'</strong>?', function(){
     r.status='Rejected'; saveData(); renderAdminRegistrations(document.getElementById('adminContent')); toast('Pendaftaran ditolak.','warn');
   });
 }
@@ -1701,13 +1692,13 @@ function renderLeaveTable(status){
       '<button class="icon-action danger" title="Tolak" onclick="rejectLeave(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
     }
     actions += '<button class="icon-action danger" title="Padam Rekod" onclick="deleteLeaveRequest(\''+l.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>';
-    return '<tr><td>'+l.teacherName+'</td><td>'+fmtDate(l.dateFrom)+'</td><td>'+fmtDate(l.dateTo)+'</td><td>'+l.reason+'</td><td>'+fmtDate(l.submittedAt)+'</td><td><div class="row-actions">'+actions+'</div></td></tr>';
+    return '<tr><td>'+esc(l.teacherName)+'</td><td>'+fmtDate(l.dateFrom)+'</td><td>'+fmtDate(l.dateTo)+'</td><td>'+esc(l.reason)+'</td><td>'+fmtDate(l.submittedAt)+'</td><td><div class="row-actions">'+actions+'</div></td></tr>';
   }).join('');
 }
 function deleteLeaveRequest(id){
   var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
   if(!l) return;
-  confirmAction('Padam rekod cuti <strong>'+l.teacherName+'</strong> ('+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+')? Tindakan ini tidak boleh dibatalkan. Kalau cuti ni telah diluluskan dan masih dalam tempoh aktif, amaran di Dashboard juga akan hilang serta-merta.', function(){
+  confirmAction('Padam rekod cuti <strong>'+esc(l.teacherName)+'</strong> ('+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+')? Tindakan ini tidak boleh dibatalkan. Kalau cuti ni telah diluluskan dan masih dalam tempoh aktif, amaran di Dashboard juga akan hilang serta-merta.', function(){
     appState.leaveRequests = appState.leaveRequests.filter(function(x){return x.id!==id;});
     saveData();
     renderAdminLeave(document.getElementById('adminContent'));
@@ -1716,22 +1707,22 @@ function deleteLeaveRequest(id){
 }
 function approveLeave(id){
   var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
-  confirmAction('Luluskan cuti <strong>'+l.teacherName+'</strong> dari '+fmtDate(l.dateFrom)+' hingga '+fmtDate(l.dateTo)+'? Admin perlu cari guru pengganti untuk tempoh ini.', function(){
+  confirmAction('Luluskan cuti <strong>'+esc(l.teacherName)+'</strong> dari '+fmtDate(l.dateFrom)+' hingga '+fmtDate(l.dateTo)+'? Admin perlu cari guru pengganti untuk tempoh ini.', function(){
     l.status='Approved';
-    pushNotification('Cuti '+l.teacherName+' ('+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+') diluluskan. Sila cari guru pengganti.');
+    pushNotification('Cuti '+esc(l.teacherName)+' ('+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+') diluluskan. Sila cari guru pengganti.');
     saveData(); renderAdminLeave(document.getElementById('adminContent')); toast('Permohonan cuti diluluskan.');
   });
 }
 function rejectLeave(id){
   var l = appState.leaveRequests.filter(function(x){return x.id===id;})[0];
-  confirmAction('Tolak permohonan cuti <strong>'+l.teacherName+'</strong>?', function(){
+  confirmAction('Tolak permohonan cuti <strong>'+esc(l.teacherName)+'</strong>?', function(){
     l.status='Rejected'; saveData(); renderAdminLeave(document.getElementById('adminContent')); toast('Permohonan cuti ditolak.','warn');
   });
 }
 
 /* ---- Admin: Attendance (view all) ---- */
 function renderAdminAttendance(c){
-  var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'">'+cl.name+'</option>'; }).join('');
+  var classOpts = appState.classes.map(function(cl){ return '<option value="'+cl.id+'">'+esc(cl.name)+'</option>'; }).join('');
   c.innerHTML =
   '<div class="toolbar"><div class="toolbar-filters">'+
   '<select class="filter-select" id="attClassSel" onchange="renderAdminAttTable()"><option value="">Semua Kelas</option>'+classOpts+'</select>'+
@@ -1747,7 +1738,7 @@ function renderAdminAttTable(){
   var body = document.getElementById('attTableBody');
   if(recs.length===0){ body.innerHTML = emptyRow(4); return; }
   body.innerHTML = recs.map(function(a){ var s = studentById(a.studentId); var cl = classById(a.classId);
-    return '<tr><td>'+(s?s.fullName:'-')+'</td><td>'+(cl?cl.name:'-')+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.note||'-')+'</td></tr>'; }).join('');
+    return '<tr><td>'+(s?esc(s.fullName):'-')+'</td><td>'+(cl?esc(cl.name):'-')+'</td><td>'+statusBadge(a.status)+'</td><td>'+esc(a.note||'-')+'</td></tr>'; }).join('');
 }
 
 /* ---- Admin: Reading (view all) ---- */
@@ -1764,7 +1755,7 @@ function renderAdminReadTable(){
   var body = document.getElementById('readTableBody');
   if(recs.length===0){ body.innerHTML = emptyRow(6); return; }
   body.innerHTML = recs.slice(0,60).map(function(r){ var s = studentById(r.studentId);
-    return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(s?s.fullName:'-')+'</td><td>'+(r.book==='Al-Quran'?r.surah+' '+r.ayatFrom+'-'+r.ayatTo:"Iqra' "+r.iqraLevel+' m/s '+r.pageFrom+'-'+r.pageTo)+'</td><td>'+r.kelancaran+'/5</td><td>'+r.tajwid+'/5</td><td>'+r.makhraj+'/5</td></tr>'; }).join('');
+    return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(s?esc(s.fullName):'-')+'</td><td>'+(r.book==='Al-Quran'?esc(r.surah)+' '+r.ayatFrom+'-'+r.ayatTo:"Iqra' "+esc(r.iqraLevel)+' m/s '+r.pageFrom+'-'+r.pageTo)+'</td><td>'+r.kelancaran+'/5</td><td>'+r.tajwid+'/5</td><td>'+r.makhraj+'/5</td></tr>'; }).join('');
 }
 
 /* ---- Admin: Fees ---- */
@@ -1793,13 +1784,13 @@ function renderFeeTable(){
   var body = document.getElementById('feeTableBody');
   if(recs.length===0){ body.innerHTML = emptyRow(6); return; }
   body.innerHTML = recs.map(function(f){ var s=studentById(f.studentId);
-    return '<tr><td>'+(s?s.fullName:'-')+'</td><td>'+f.month+'</td><td>RM'+f.amount+'</td><td>'+statusBadge(f.status)+'</td><td>'+(f.paidDate?fmtDate(f.paidDate):'-')+'</td>'+
+    return '<tr><td>'+(s?esc(s.fullName):'-')+'</td><td>'+f.month+'</td><td>RM'+f.amount+'</td><td>'+statusBadge(f.status)+'</td><td>'+(f.paidDate?fmtDate(f.paidDate):'-')+'</td>'+
     '<td><div class="row-actions">'+(f.status==='Pending'?('<button class="btn btn-outline btn-sm" onclick="openFeeModal(\''+f.id+'\')">Rekod Bayaran</button>'):('<button class="icon-action" title="Hantar peringatan" onclick="sendWhatsApp(\''+(s?s.guardianPhone:'')+'\',\'Assalamualaikum, terima kasih kerana telah menjelaskan yuran bulan ini.\')">'+iconSvg('whatsapp')+'</button>'))+'</div></td></tr>'; }).join('');
 }
 function openFeeModal(id){
   var f = appState.feePayments.filter(function(x){return x.id===id;})[0]; var s = studentById(f.studentId);
   openModal('Rekod Bayaran Yuran',
-    '<div class="field"><label>Pelajar</label><input type="text" value="'+s.fullName+'" disabled></div>'+
+    '<div class="field"><label>Pelajar</label><input type="text" value="'+esc(s.fullName)+'" disabled></div>'+
     '<div class="input-row"><div class="field"><label>Jumlah (RM)</label><input type="number" id="feeAmount" value="'+f.amount+'"></div><div class="field"><label>Tarikh Bayaran</label><input type="date" id="feePaidDate" value="'+todayISO()+'"></div></div>',
     '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="saveFeePayment(\''+id+'\')">Simpan</button>');
 }
@@ -1817,7 +1808,7 @@ function saveFeePayment(id){
 function renderAdminReports(c){
   var monthNames = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
   var monthOpts = monthNames.map(function(m,i){ return '<option value="'+i+'" '+(i===8?'selected':'')+'>'+m+'</option>'; }).join('');
-  var studentOpts = appState.students.map(function(s){ return '<option value="'+s.id+'">'+s.fullName+'</option>'; }).join('');
+  var studentOpts = appState.students.map(function(s){ return '<option value="'+s.id+'">'+esc(s.fullName)+'</option>'; }).join('');
   c.innerHTML =
   '<div class="two-col">'+
   '<div class="card card-pad"><h3 style="margin-bottom:16px;">Jana Laporan Bulanan</h3>'+
@@ -1851,12 +1842,12 @@ function renderReportDoc(studentId, monthIdx, year, host){
   var avgK = latest?latest.kelancaran:0, avgT = latest?latest.tajwid:0, avgM = latest?latest.makhraj:0;
   host.innerHTML =
   '<div class="report-doc" id="printArea" style="margin-top:24px;">'+
-    '<div class="report-head"><div class="brand"><span class="brand-mark"></span><span>HISSUK Center</span></div><h2>Laporan Bulanan '+monthNames[monthIdx]+' '+year+'</h2></div>'+
+    '<div class="report-head"><div class="brand"><span class="brand-mark"></span><span>E-Mengaji</span></div><h2>Laporan Bulanan '+monthNames[monthIdx]+' '+year+'</h2></div>'+
     '<div class="report-body">'+
       '<div class="report-grid"><div class="report-block"><h5>Maklumat Pelajar</h5>'+
-        '<div class="kv"><span>Nama</span><span>'+s.fullName+'</span></div>'+
-        '<div class="kv"><span>Kelas</span><span>'+(cl?cl.name:'-')+'</span></div>'+
-        '<div class="kv"><span>Guru</span><span>'+(t?t.name:'-')+'</span></div>'+
+        '<div class="kv"><span>Nama</span><span>'+esc(s.fullName)+'</span></div>'+
+        '<div class="kv"><span>Kelas</span><span>'+(cl?esc(cl.name):'-')+'</span></div>'+
+        '<div class="kv"><span>Guru</span><span>'+(t?esc(t.name):'-')+'</span></div>'+
         '<div class="kv"><span>Bulan Laporan</span><span>'+monthNames[monthIdx]+' '+year+'</span></div></div>'+
         '<div class="report-block"><h5>Ringkasan Kehadiran</h5>'+
         '<div class="kv"><span>Jumlah Kelas Berlangsung</span><span>'+total+'</span></div>'+
@@ -1866,12 +1857,12 @@ function renderReportDoc(studentId, monthIdx, year, host){
         '<div class="kv"><span>Peratus Kehadiran</span><span><strong>'+pct+'%</strong></span></div></div></div>'+
       '<div class="report-grid"><div class="report-block"><h5>Kemajuan Mengaji</h5>'+
         '<div class="kv"><span>Tahap Semasa</span><span>'+s.level+'</span></div>'+
-        '<div class="kv"><span>Bacaan Terakhir</span><span>'+(latest? (latest.book==='Al-Quran'? latest.surah+' ayat '+latest.ayatFrom+'-'+latest.ayatTo : "Iqra' "+latest.iqraLevel+' m/s '+latest.pageFrom+'-'+latest.pageTo) : '-')+'</span></div></div>'+
+        '<div class="kv"><span>Bacaan Terakhir</span><span>'+(latest? (latest.book==='Al-Quran'? esc(latest.surah)+' ayat '+latest.ayatFrom+'-'+latest.ayatTo : "Iqra' "+esc(latest.iqraLevel)+' m/s '+latest.pageFrom+'-'+latest.pageTo) : '-')+'</span></div></div>'+
         '<div class="report-block"><h5>Penilaian</h5>'+
         '<div class="kv"><span>Kelancaran</span><span>'+avgK+'/5</span></div>'+
         '<div class="kv"><span>Tajwid</span><span>'+avgT+'/5</span></div>'+
         '<div class="kv"><span>Makhraj</span><span>'+avgM+'/5</span></div></div></div>'+
-      '<div class="report-block"><h5>Ulasan Guru</h5><p style="font-size:14px;line-height:1.7;">'+(latest?latest.note:'Tiada ulasan direkodkan bagi bulan ini.')+'</p></div>'+
+      '<div class="report-block"><h5>Ulasan Guru</h5><p style="font-size:14px;line-height:1.7;">'+(latest?esc(latest.note):'Tiada ulasan direkodkan bagi bulan ini.')+'</p></div>'+
       '<div class="report-signoff"><div><div class="sig-line">Tandatangan Guru</div></div><div><div class="sig-line">Tandatangan Ibu Bapa / Penjaga</div></div></div>'+
     '</div></div>'+
   '<div class="no-print" style="max-width:760px;margin:16px auto 0;text-align:right;"><button class="btn btn-primary" onclick="window.print()"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg> Cetak / Simpan PDF</button></div>';
@@ -1896,10 +1887,10 @@ function renderAdminAnnouncements(c){
     var imageHtml = a.image ? '<img src="'+a.image+'" alt="Poster pengumuman" style="width:100%;max-width:320px;border-radius:10px;margin:10px 0;display:block;">' : '';
     var linkHtml = a.url ? '<a href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="margin-top:10px;display:inline-flex;">'+iconSvg('link')+' Buka Pautan</a>' : '';
     return '<div style="padding:18px 20px;border-bottom:1px solid var(--border);">'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div><h4 style="font-size:15px;">'+a.title+'</h4><p style="font-size:12.5px;color:var(--muted);margin-top:3px;">'+fmtDate(a.date)+'</p></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div><h4 style="font-size:15px;">'+esc(a.title)+'</h4><p style="font-size:12.5px;color:var(--muted);margin-top:3px;">'+fmtDate(a.date)+'</p></div>'+
       '<button class="icon-action danger" onclick="deleteAnnouncement(\''+a.id+'\')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button></div>'+
       imageHtml+
-      '<p style="font-size:13.5px;margin-top:10px;color:var(--text);">'+a.body+'</p>'+
+      '<p style="font-size:13.5px;margin-top:10px;color:var(--text);">'+esc(a.body)+'</p>'+
       linkHtml+
       '<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">'+
         '<button class="btn '+(guruSent?'btn-ghost':'btn-outline')+' btn-sm" '+(guruSent?'disabled':'')+' onclick="sendAnnouncementTo(\''+a.id+'\',\'guru\')">'+(guruSent?'&#10003; Telah Dihantar ke Guru':'Hantar kepada Guru')+'</button>'+
@@ -1978,7 +1969,7 @@ function sendAnnouncementTo(id, target){
   if(!a) return;
   var targetLabel = target==='guru' ? 'Guru' : 'Ibu Bapa';
   if(target==='guru') a.sentToGuru = true; else a.sentToParent = true;
-  pushNotification('Pengumuman "'+a.title+'" telah dihantar kepada '+targetLabel+'.');
+  pushNotification('Pengumuman "'+esc(a.title)+'" telah dihantar kepada '+targetLabel+'.');
   saveData();
   renderAdminAnnouncements(document.getElementById('adminContent'));
   toast('Pengumuman dihantar kepada '+targetLabel+'.');
@@ -2053,12 +2044,12 @@ function getRelevantAnnouncementsForRole(role){
   });
 }
 function getSeenAnnouncementIds(userId){
-  try{ return JSON.parse(localStorage.getItem('hissukCenter_seen_ann_'+userId) || '[]'); }catch(e){ return []; }
+  try{ return JSON.parse(localStorage.getItem('emengaji_seen_ann_'+userId) || '[]'); }catch(e){ return []; }
 }
 function markAnnouncementsSeen(userId, ids){
   var seen = getSeenAnnouncementIds(userId);
   ids.forEach(function(id){ if(seen.indexOf(id)===-1) seen.push(id); });
-  localStorage.setItem('hissukCenter_seen_ann_'+userId, JSON.stringify(seen));
+  localStorage.setItem('emengaji_seen_ann_'+userId, JSON.stringify(seen));
 }
 function updateNotifBadge(elId, role){
   var user = appState.currentUser;
@@ -2073,8 +2064,13 @@ function updateNotifBadge(elId, role){
 
 function renderTeacher(section){
   var user = appState.currentUser;
-  var teacher = appState.teachers.filter(function(t){return t.id===user.teacherId || t.id===user.id;})[0];
-  if(!teacher){ document.getElementById('teacherContent').innerHTML='<div class="empty-state">Profil guru belum dipautkan kepada rekod guru. Sila hubungi pentadbir HISSUK Center.</div>'; return; }
+  var teacher = appState.teachers.filter(function(t){return t.id===user.id;})[0];
+  if(!teacher){
+    // JANGAN fallback ke guru lain - ini boleh dedahkan data guru salah kepada pengguna salah.
+    toast('Ralat: akaun guru anda tidak dijumpai dalam sistem. Sila hubungi admin.', 'error');
+    logout();
+    return;
+  }
   document.getElementById('teacherName').textContent = teacher.name;
   document.getElementById('teacherAvatar').textContent = initials(teacher.name);
   updateNotifBadge('teacherNotifCount', 'guru');
@@ -2097,20 +2093,20 @@ function renderTeacherDashboard(c, teacher){
   var hadirCount = todaysAtt.filter(function(a){return a.status==='Hadir'||a.status==='Lewat';}).length;
   c.innerHTML =
   '<div class="today-card"><span class="lbl">'+new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'})+'</span>'+
-  '<h3>'+(todaysClass?todaysClass.name:'Tiada kelas hari ini')+'</h3>'+
-  (todaysClass? ('<div class="meta"><svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+todaysClass.time+'</div>') : '')+
+  '<h3>'+(todaysClass?esc(todaysClass.name):'Tiada kelas hari ini')+'</h3>'+
+  (todaysClass? ('<div class="meta"><svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+esc(todaysClass.time)+'</div>') : '')+
   '</div>'+
   '<div class="mini-stat-row"><div class="mini-stat"><b>'+roster.length+'</b><span>Jumlah Pelajar</span></div><div class="mini-stat"><b>'+hadirCount+'/'+roster.length+'</b><span>Kehadiran</span></div><div class="mini-stat"><b>'+myClasses.length+'</b><span>Kelas Diajar</span></div></div>'+
   '<div style="display:flex;gap:10px;margin-bottom:6px;"><button class="btn btn-primary btn-block" onclick="go(\'/teacher/kehadiran\')">'+iconSvg('attendance')+' Ambil Kehadiran</button></div>'+
   '<div style="display:flex;gap:10px;margin-bottom:6px;"><button class="btn btn-outline btn-block" onclick="go(\'/teacher/bacaan\')">'+iconSvg('reading')+' Rekod Bacaan</button></div>'+
   '<div class="t-section-title">Kelas Yang Diajar</div>'+
-  (myClasses.map(function(cl){ var cnt=appState.students.filter(function(s){return s.classId===cl.id && s.status==='Aktif';}).length; return '<div class="t-class-item"><div><div class="cname">'+cl.name+'</div><div class="ctime">'+cl.time+'</div></div><span class="badge badge-green">'+cnt+' pelajar</span></div>'; }).join('') || '<div class="empty-state">Tiada kelas ditugaskan.</div>');
+  (myClasses.map(function(cl){ var cnt=appState.students.filter(function(s){return s.classId===cl.id && s.status==='Aktif';}).length; return '<div class="t-class-item"><div><div class="cname">'+esc(cl.name)+'</div><div class="ctime">'+esc(cl.time)+'</div></div><span class="badge badge-green">'+cnt+' pelajar</span></div>'; }).join('') || '<div class="empty-state">Tiada kelas ditugaskan.</div>');
 }
 function renderTeacherClasses(c, teacher){
   var myClasses = appState.classes.filter(function(cl){return cl.teacherId===teacher.id;});
   c.innerHTML = '<div class="t-section-title" style="margin-top:0;">Kelas Saya</div>' + (myClasses.map(function(cl){
     var roster = appState.students.filter(function(s){return s.classId===cl.id;});
-    return '<div class="today-card"><h3 style="font-size:16px;">'+cl.name+'</h3><div class="meta">'+cl.time+'</div><div class="meta">'+iconSvg('students')+' '+roster.length+' pelajar berdaftar</div>'+
+    return '<div class="today-card"><h3 style="font-size:16px;">'+esc(cl.name)+'</h3><div class="meta">'+esc(cl.time)+'</div><div class="meta">'+iconSvg('students')+' '+roster.length+' pelajar berdaftar</div>'+
     '<div style="display:flex;gap:8px;margin-top:12px;"><button class="btn btn-outline btn-sm" style="flex:1;" onclick="go(\'/teacher/kehadiran\')">Kehadiran</button><button class="btn btn-outline btn-sm" style="flex:1;" onclick="go(\'/teacher/bacaan\')">Bacaan</button></div></div>';
   }).join('') || '<div class="empty-state">Tiada kelas ditugaskan.</div>');
 }
@@ -2130,7 +2126,7 @@ function renderTeacherAttendance(c, teacher){
   var hadirN = 0, tidakN = 0;
   for(var k in teacherAttState.rows){ var st = teacherAttState.rows[k].status; if(st==='Hadir'||st==='Lewat') hadirN++; if(st==='Tidak Hadir') tidakN++; }
 
-  var classOpts = myClasses.map(function(cl){ return '<option value="'+cl.id+'" '+(cl.id===teacherAttState.classId?'selected':'')+'>'+cl.name+'</option>'; }).join('');
+  var classOpts = myClasses.map(function(cl){ return '<option value="'+cl.id+'" '+(cl.id===teacherAttState.classId?'selected':'')+'>'+esc(cl.name)+'</option>'; }).join('');
 
   var html = '';
   html += '<div class="input-row" style="margin-bottom:14px;">';
@@ -2144,14 +2140,14 @@ function renderTeacherAttendance(c, teacher){
   roster.forEach(function(s){
     var r = teacherAttState.rows[s.id];
     html += '<div class="att-row-full">'+
-      '<div style="display:flex;align-items:center;gap:10px;"><div class="savatar">'+initials(s.fullName)+'</div><div><div class="sname">'+s.fullName+'</div><div class="snum">'+s.nickname+'</div></div></div>'+
+      '<div style="display:flex;align-items:center;gap:10px;"><div class="savatar">'+initials(s.fullName)+'</div><div><div class="sname">'+esc(s.fullName)+'</div><div class="snum">'+esc(s.nickname)+'</div></div></div>'+
       '<div class="att-status-group">'+
         '<button class="att-chip sel-hadir '+(r.status==='Hadir'?'selected':'')+'" onclick="setAttStatus(\''+s.id+'\',\'Hadir\')">Hadir</button>'+
         '<button class="att-chip sel-tidak '+(r.status==='Tidak Hadir'?'selected':'')+'" onclick="setAttStatus(\''+s.id+'\',\'Tidak Hadir\')">Tidak Hadir</button>'+
         '<button class="att-chip sel-cuti '+(r.status==='Cuti Bersebab'?'selected':'')+'" onclick="setAttStatus(\''+s.id+'\',\'Cuti Bersebab\')">Cuti Bersebab</button>'+
         '<button class="att-chip sel-lewat '+(r.status==='Lewat'?'selected':'')+'" onclick="setAttStatus(\''+s.id+'\',\'Lewat\')">Lewat</button>'+
       '</div>'+
-      '<input type="text" class="att-note-input" placeholder="Catatan (pilihan)" value="'+(r.note||'')+'" oninput="teacherAttState.rows[\''+s.id+'\'].note=this.value">'+
+      '<input type="text" class="att-note-input" placeholder="Catatan (pilihan)" value="'+esc(r.note||'')+'" oninput="teacherAttState.rows[\''+s.id+'\'].note=this.value">'+
     '</div>';
   });
   html += '</div>';
@@ -2176,13 +2172,13 @@ function saveAttendance(){
   });
   var clsObj = classById(classId);
   var teacherNameForNotif = appState.currentUser ? appState.currentUser.name : 'Seorang guru';
-  pushNotification(teacherNameForNotif+' telah merekod kehadiran kelas '+(clsObj?clsObj.name:'-')+' pada '+fmtDate(date)+'.');
+  pushNotification(esc(teacherNameForNotif)+' telah merekod kehadiran kelas '+(clsObj?esc(clsObj.name):'-')+' pada '+fmtDate(date)+'.');
   saveData();
   toast('Kehadiran berjaya disimpan!');
 }
 function renderTeacherReading(c, teacher){
   var myStudents = studentsOfTeacher(teacher.id);
-  var opts = myStudents.map(function(s){ return '<option value="'+s.id+'">'+s.fullName+'</option>'; }).join('');
+  var opts = myStudents.map(function(s){ return '<option value="'+s.id+'">'+esc(s.fullName)+'</option>'; }).join('');
   c.innerHTML = '<div class="field"><label>Pilih Pelajar</label><select id="readStudentSel" onchange="renderReadingFormFor(this.value)">'+opts+'</select></div><div id="readingFormHost"></div>';
   if(myStudents.length) renderReadingFormFor(myStudents[0].id);
 }
@@ -2213,7 +2209,7 @@ function renderReadingFormFor(studentId){
     '<button class="btn btn-primary btn-block" onclick="saveReadingRecord(\''+studentId+'\')">Simpan Rekod</button>'+
   '</div>'+
   '<div class="t-section-title">Sejarah Terkini</div>'+
-  (hist.map(function(r){ return '<div class="t-class-item"><div><div class="cname">'+(r.book==='Al-Quran'?r.surah+' '+r.ayatFrom+'-'+r.ayatTo:"Iqra' "+r.iqraLevel+' m/s '+r.pageFrom+'-'+r.pageTo)+'</div><div class="ctime">'+fmtDate(r.date)+'</div></div><span class="badge badge-green">'+r.kelancaran+'/5</span></div>'; }).join('') || '<div class="empty-state">Tiada sejarah bacaan.</div>');
+  (hist.map(function(r){ return '<div class="t-class-item"><div><div class="cname">'+(r.book==='Al-Quran'?esc(r.surah)+' '+r.ayatFrom+'-'+r.ayatTo:"Iqra' "+esc(r.iqraLevel)+' m/s '+r.pageFrom+'-'+r.pageTo)+'</div><div class="ctime">'+fmtDate(r.date)+'</div></div><span class="badge badge-green">'+r.kelancaran+'/5</span></div>'; }).join('') || '<div class="empty-state">Tiada sejarah bacaan.</div>');
 }
 function toggleBookFields(val){
   document.getElementById('iqraFields').style.display = val==="Al-Quran" ? 'none':'block';
@@ -2235,7 +2231,7 @@ function saveReadingRecord(studentId){
   appState.readingRecords.unshift(rec);
   var stuObj = studentById(studentId);
   var teacherNameForNotif2 = appState.currentUser ? appState.currentUser.name : 'Seorang guru';
-  pushNotification(teacherNameForNotif2+' telah merekod bacaan untuk '+(stuObj?stuObj.fullName:'seorang pelajar')+'.');
+  pushNotification(esc(teacherNameForNotif2)+' telah merekod bacaan untuk '+(stuObj?esc(stuObj.fullName):'seorang pelajar')+'.');
   saveData();
   toast('Rekod bacaan berjaya disimpan!');
   renderReadingFormFor(studentId);
@@ -2244,12 +2240,12 @@ function renderTeacherProfile(c, teacher){
   var myClasses = appState.classes.filter(function(cl){return cl.teacherId===teacher.id;});
   var myLeaves = appState.leaveRequests.filter(function(l){return l.teacherId===teacher.id;}).sort(function(a,b){return b.submittedAt.localeCompare(a.submittedAt);});
   c.innerHTML =
-  '<div class="today-card" style="text-align:center;"><div class="avatar" style="width:64px;height:64px;font-size:20px;margin:0 auto 12px;background:var(--emerald);">'+initials(teacher.name)+'</div><h3>'+teacher.name+'</h3><p style="font-size:13px;color:var(--muted);margin-top:4px;">'+teacher.email+'</p><p style="font-size:13px;color:var(--muted);">'+teacher.phone+'</p></div>'+
+  '<div class="today-card" style="text-align:center;"><div class="avatar" style="width:64px;height:64px;font-size:20px;margin:0 auto 12px;background:var(--emerald);">'+initials(teacher.name)+'</div><h3>'+esc(teacher.name)+'</h3><p style="font-size:13px;color:var(--muted);margin-top:4px;">'+esc(teacher.email)+'</p><p style="font-size:13px;color:var(--muted);">'+esc(teacher.phone)+'</p></div>'+
   '<div class="t-section-title">Kelas Ditugaskan</div>'+
-  myClasses.map(function(cl){ return '<div class="t-class-item"><div class="cname">'+cl.name+'</div><div class="ctime">'+cl.time+'</div></div>'; }).join('')+
+  myClasses.map(function(cl){ return '<div class="t-class-item"><div class="cname">'+esc(cl.name)+'</div><div class="ctime">'+esc(cl.time)+'</div></div>'; }).join('')+
   '<div class="t-section-title">Permohonan Cuti</div>'+
   '<button class="btn btn-primary btn-block" style="margin-bottom:12px;" onclick="openLeaveForm(\''+teacher.id+'\',\''+teacher.name.replace(/'/g,'')+'\')">'+iconSvg('leave')+' Mohon Cuti Baharu</button>'+
-  (myLeaves.length? myLeaves.map(function(l){ return '<div class="t-class-item"><div><div class="cname">'+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+'</div><div class="ctime">'+l.reason+'</div></div>'+statusBadge(l.status)+'</div>'; }).join('') : '<div class="empty-state">Tiada rekod permohonan cuti.</div>')+
+  (myLeaves.length? myLeaves.map(function(l){ return '<div class="t-class-item"><div><div class="cname">'+fmtDate(l.dateFrom)+' - '+fmtDate(l.dateTo)+'</div><div class="ctime">'+esc(l.reason)+'</div></div>'+statusBadge(l.status)+'</div>'; }).join('') : '<div class="empty-state">Tiada rekod permohonan cuti.</div>')+
   '<button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="logout()">Log Keluar</button>';
 }
 function openLeaveForm(teacherId, teacherName){
@@ -2275,7 +2271,7 @@ function submitLeaveRequest(teacherId, teacherName){
 
     if(!appState.leaveRequests) appState.leaveRequests = [];
     appState.leaveRequests.unshift({id:uid('lv'), teacherId:teacherId, teacherName:teacherName, dateFrom:dateFrom, dateTo:dateTo, reason:reason, status:'Pending', submittedAt:todayISO()});
-    pushNotification(teacherName+' memohon cuti dari '+fmtDate(dateFrom)+' hingga '+fmtDate(dateTo)+' (sebab: '+reason+').');
+    pushNotification(esc(teacherName)+' memohon cuti dari '+fmtDate(dateFrom)+' hingga '+fmtDate(dateTo)+' (sebab: '+esc(reason)+').');
 
     // Kemaskini UI SERTA-MERTA - tak tunggu Firestore, supaya guru nampak hasil segera
     closeModal();
@@ -2297,7 +2293,7 @@ function renderTeacherNotif(c){
   var annHtml = sentAnnouncements.length ? sentAnnouncements.map(function(a){
     var imageHtml = a.image ? '<img src="'+a.image+'" alt="Poster" style="width:100%;border-radius:10px;margin:8px 0;display:block;">' : '';
     var linkHtml = a.url ? '<a href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm btn-block" style="margin-top:10px;">'+iconSvg('link')+' Buka Pautan</a>' : '';
-    return '<div class="today-card"><h3 style="font-size:15px;">'+a.title+'</h3><p style="font-size:11.5px;color:var(--muted);margin-top:2px;">'+fmtDate(a.date)+'</p>'+imageHtml+'<p style="font-size:13.5px;margin-top:8px;">'+a.body+'</p>'+linkHtml+'</div>';
+    return '<div class="today-card"><h3 style="font-size:15px;">'+esc(a.title)+'</h3><p style="font-size:11.5px;color:var(--muted);margin-top:2px;">'+fmtDate(a.date)+'</p>'+imageHtml+'<p style="font-size:13.5px;margin-top:8px;">'+esc(a.body)+'</p>'+linkHtml+'</div>';
   }).join('') : '<div class="empty-state">Tiada pengumuman.</div>';
   c.innerHTML = '<div class="t-section-title" style="margin-top:0;">Pengumuman</div>' + annHtml;
   if(appState.currentUser){
@@ -2349,8 +2345,8 @@ function renderParent(section){
   if(children.length>1){
     var curChild = studentById(selectedChildId);
     switchWrap.innerHTML =
-      '<button class="child-switch-btn" onclick="document.getElementById(\'childDropdown\').classList.toggle(\'open\')">'+iconSvg('child')+' '+(curChild?curChild.fullName:'Pilih Anak')+' <svg class="icon-sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>'+
-      '<div class="child-dropdown" id="childDropdown">'+children.map(function(ch){ return '<button onclick="selectedChildId=\''+ch.id+'\'; document.getElementById(\'childDropdown\').classList.remove(\'open\'); renderParent(\''+section+'\');"><div class="avatar" style="width:26px;height:26px;font-size:11px;background:'+ch.avatarColor+';">'+initials(ch.fullName)+'</div>'+ch.fullName+'</button>'; }).join('')+'</div>';
+      '<button class="child-switch-btn" onclick="document.getElementById(\'childDropdown\').classList.toggle(\'open\')">'+iconSvg('child')+' '+(curChild?esc(curChild.fullName):'Pilih Anak')+' <svg class="icon-sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>'+
+      '<div class="child-dropdown" id="childDropdown">'+children.map(function(ch){ return '<button onclick="selectedChildId=\''+ch.id+'\'; document.getElementById(\'childDropdown\').classList.remove(\'open\'); renderParent(\''+section+'\');"><div class="avatar" style="width:26px;height:26px;font-size:11px;background:'+ch.avatarColor+';">'+initials(ch.fullName)+'</div>'+esc(ch.fullName)+'</button>'; }).join('')+'</div>';
   } else { switchWrap.innerHTML=''; }
 
   var c = document.getElementById('parentContent');
@@ -2368,7 +2364,7 @@ function renderParentDashboard(c){
   var attRecs = appState.attendance.filter(function(a){return a.studentId===s.id;}).slice(-7);
   var html = '';
   html += '<div class="dash-grid">';
-  html += '<div class="card card-pad" style="display:flex;gap:16px;align-items:center;"><div class="avatar" style="width:64px;height:64px;font-size:20px;background:'+s.avatarColor+';">'+initials(s.fullName)+'</div><div><h3 style="font-size:19px;">'+s.fullName+'</h3><p style="font-size:13.5px;color:var(--muted);">'+levelBadge(s.level)+'&nbsp;&middot;&nbsp;Kelas '+(cl?cl.name:'-')+'</p><p style="font-size:13px;color:var(--muted);margin-top:4px;">Guru: '+(t?t.name:'-')+'</p></div></div>';
+  html += '<div class="card card-pad" style="display:flex;gap:16px;align-items:center;"><div class="avatar" style="width:64px;height:64px;font-size:20px;background:'+s.avatarColor+';">'+initials(s.fullName)+'</div><div><h3 style="font-size:19px;">'+esc(s.fullName)+'</h3><p style="font-size:13.5px;color:var(--muted);">'+levelBadge(s.level)+'&nbsp;&middot;&nbsp;Kelas '+(cl?esc(cl.name):'-')+'</p><p style="font-size:13px;color:var(--muted);margin-top:4px;">Guru: '+(t?esc(t.name):'-')+'</p></div></div>';
   html += '<div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:0;">'+statCard('Kehadiran Bulan Ini', pct+'%', attRecs.length+' kelas direkodkan', 'attendance','var(--emerald)')+statCard('Status Yuran', fee?fee.status:'-', fee&&fee.status==='Pending'?'Sila jelaskan segera':'Terkini', 'fees', fee&&fee.status==='Pending'?'var(--danger)':'var(--emerald)')+'</div>';
   html += '</div>';
 
@@ -2379,7 +2375,7 @@ function renderParentDashboard(c){
     html += '<div class="bar-col"><div class="bar-stack" style="height:'+h+'%;background:'+color+';"></div><span class="lbl">'+w+'</span></div>';
   });
   html += '</div><div style="display:flex;gap:16px;padding:0 20px 18px;font-size:12px;color:var(--muted);"><span><span class="legend-dot" style="background:var(--emerald);display:inline-block;"></span> Hadir</span><span><span class="legend-dot" style="background:var(--danger);display:inline-block;"></span> Tidak hadir</span></div></div>';
-  html += '<div class="card card-pad"><h3 style="font-size:15.5px;margin-bottom:12px;">Ulasan Guru</h3><p style="font-family:var(--font-head);font-style:italic;font-size:14.5px;color:var(--text);">"'+(latest?latest.note:'Belum ada ulasan lagi.')+'"</p><p style="font-size:12px;color:var(--muted);margin-top:10px;">&mdash; '+(t?t.name:'-')+', '+(latest?fmtDate(latest.date):'')+'</p></div>';
+  html += '<div class="card card-pad"><h3 style="font-size:15.5px;margin-bottom:12px;">Ulasan Guru</h3><p style="font-family:var(--font-head);font-style:italic;font-size:14.5px;color:var(--text);">"'+(latest?esc(latest.note):'Belum ada ulasan lagi.')+'"</p><p style="font-size:12px;color:var(--muted);margin-top:10px;">&mdash; '+(t?esc(t.name):'-')+', '+(latest?fmtDate(latest.date):'')+'</p></div>';
   html += '</div>';
 
   html += '<div class="two-col"><div class="card card-pad"><h3 style="font-size:15.5px;margin-bottom:14px;">Pautan Pantas</h3><div class="quick-actions">';
@@ -2388,17 +2384,17 @@ function renderParentDashboard(c){
   html += '<button class="qa-btn" onclick="go(\'/parent/laporan\')">'+iconSvg('reports')+'Laporan Bulanan</button>';
   html += '<button class="qa-btn" onclick="go(\'/parent/yuran\')">'+iconSvg('fees')+'Bayaran Yuran</button>';
   html += '</div></div>';
-  html += '<div class="card card-pad"><h3 style="font-size:15.5px;margin-bottom:14px;">Bacaan Terkini</h3>'+(latest? ('<p style="font-size:14px;">'+(latest.book==='Al-Quran'?latest.surah+' ayat '+latest.ayatFrom+'-'+latest.ayatTo:"Iqra' "+latest.iqraLevel+' muka surat '+latest.pageFrom+'-'+latest.pageTo)+'</p><p style="font-size:12.5px;color:var(--muted);margin-top:4px;">'+fmtDate(latest.date)+'</p>') : '<p style="color:var(--muted);font-size:13.5px;">Tiada rekod bacaan lagi.</p>')+'</div>';
+  html += '<div class="card card-pad"><h3 style="font-size:15.5px;margin-bottom:14px;">Bacaan Terkini</h3>'+(latest? ('<p style="font-size:14px;">'+(latest.book==='Al-Quran'?esc(latest.surah)+' ayat '+latest.ayatFrom+'-'+latest.ayatTo:"Iqra' "+esc(latest.iqraLevel)+' muka surat '+latest.pageFrom+'-'+latest.pageTo)+'</p><p style="font-size:12.5px;color:var(--muted);margin-top:4px;">'+fmtDate(latest.date)+'</p>') : '<p style="color:var(--muted);font-size:13.5px;">Tiada rekod bacaan lagi.</p>')+'</div>';
   html += '</div>';
   c.innerHTML = html;
 }
 function renderParentChild(c){
   var s = studentById(selectedChildId); var cl = classById(s.classId); var t = teacherById(s.teacherId);
   c.innerHTML =
-  '<div class="card card-pad" style="max-width:640px;"><div style="display:flex;gap:16px;align-items:center;margin-bottom:20px;"><div class="avatar" style="width:60px;height:60px;font-size:19px;background:'+s.avatarColor+';">'+initials(s.fullName)+'</div><div><h3 style="font-size:19px;">'+s.fullName+'</h3><p style="color:var(--muted);font-size:13.5px;">'+s.nickname+'</p></div></div>'+
+  '<div class="card card-pad" style="max-width:640px;"><div style="display:flex;gap:16px;align-items:center;margin-bottom:20px;"><div class="avatar" style="width:60px;height:60px;font-size:19px;background:'+s.avatarColor+';">'+initials(s.fullName)+'</div><div><h3 style="font-size:19px;">'+esc(s.fullName)+'</h3><p style="color:var(--muted);font-size:13.5px;">'+esc(s.nickname)+'</p></div></div>'+
   '<div class="kv"><span>Tarikh Lahir</span><span>'+fmtDate(s.dob)+'</span></div>'+
-  '<div class="kv"><span>Kelas</span><span>'+(cl?cl.name:'-')+' ('+(cl?cl.time:'')+')</span></div>'+
-  '<div class="kv"><span>Guru</span><span>'+(t?t.name:'-')+'</span></div>'+
+  '<div class="kv"><span>Kelas</span><span>'+(cl?esc(cl.name):'-')+' ('+(cl?esc(cl.time):'')+')</span></div>'+
+  '<div class="kv"><span>Guru</span><span>'+(t?esc(t.name):'-')+'</span></div>'+
   '<div class="kv"><span>Tahap Mengaji</span><span>'+levelBadge(s.level)+'</span></div>'+
   '<div class="kv"><span>Tarikh Mula</span><span>'+fmtDate(s.startDate)+'</span></div>'+
   '<div class="kv"><span>Status</span><span>'+statusBadge(s.status)+'</span></div></div>';
@@ -2409,7 +2405,7 @@ function renderParentAttendance(c){
   c.innerHTML =
   '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">'+statCard('Kehadiran (30 hari)', pct+'%','', 'attendance','var(--emerald)')+statCard('Jumlah Hadir', recs.filter(function(r){return r.status==='Hadir';}).length,'','attendance','var(--emerald)')+statCard('Jumlah Tidak Hadir', recs.filter(function(r){return r.status==='Tidak Hadir';}).length,'','attendance','var(--danger)')+'</div>'+
   '<div class="card"><div class="table-wrap"><table><thead><tr><th>Tarikh</th><th>Kelas</th><th>Status</th><th>Catatan</th></tr></thead><tbody>'+
-  (recs.map(function(r){ var cl=classById(r.classId); return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(cl?cl.name:'-')+'</td><td>'+statusBadge(r.status)+'</td><td>'+(r.note||'-')+'</td></tr>'; }).join('') || emptyRow(4))+
+  (recs.map(function(r){ var cl=classById(r.classId); return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(cl?esc(cl.name):'-')+'</td><td>'+statusBadge(r.status)+'</td><td>'+esc(r.note||'-')+'</td></tr>'; }).join('') || emptyRow(4))+
   '</tbody></table></div></div>';
 }
 function renderParentReading(c){
@@ -2418,7 +2414,7 @@ function renderParentReading(c){
   c.innerHTML =
   '<div class="card card-pad" style="margin-bottom:20px;"><h3 style="font-size:15.5px;margin-bottom:10px;">Tahap Semasa</h3><div style="display:flex;align-items:center;gap:14px;">'+levelBadge(s.level)+'<span style="font-size:13px;color:var(--muted);">Bermula sejak '+fmtDate(s.startDate)+'</span></div></div>'+
   '<div class="card"><div class="table-wrap"><table><thead><tr><th>Tarikh</th><th>Rujukan</th><th>Kelancaran</th><th>Tajwid</th><th>Makhraj</th><th>Catatan Guru</th></tr></thead><tbody>'+
-  (recs.map(function(r){ return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(r.book==='Al-Quran'?r.surah+' '+r.ayatFrom+'-'+r.ayatTo:"Iqra' "+r.iqraLevel+' m/s '+r.pageFrom+'-'+r.pageTo)+'</td><td>'+r.kelancaran+'/5</td><td>'+r.tajwid+'/5</td><td>'+r.makhraj+'/5</td><td>'+(r.note||'-')+'</td></tr>'; }).join('') || emptyRow(6))+
+  (recs.map(function(r){ return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(r.book==='Al-Quran'?esc(r.surah)+' '+r.ayatFrom+'-'+r.ayatTo:"Iqra' "+esc(r.iqraLevel)+' m/s '+r.pageFrom+'-'+r.pageTo)+'</td><td>'+r.kelancaran+'/5</td><td>'+r.tajwid+'/5</td><td>'+r.makhraj+'/5</td><td>'+esc(r.note||'-')+'</td></tr>'; }).join('') || emptyRow(6))+
   '</tbody></table></div></div>';
 }
 function renderParentReports(c){
@@ -2437,9 +2433,9 @@ function renderParentFees(c){
   var bankBoxHtml =
   '<div class="card card-pad" style="margin-bottom:20px;background:var(--emerald-light);border-color:var(--emerald-soft);">' +
     '<h3 style="font-size:15px;margin-bottom:12px;">Maklumat Bayaran Yuran</h3>' +
-    '<div class="kv"><span>Bank</span><span><strong>' + (s.bankName||'-') + '</strong></span></div>' +
-    '<div class="kv"><span>Nombor Akaun</span><span><strong>' + (s.bankAccountNumber||'-') + '</strong></span></div>' +
-    '<div class="kv"><span>Nama Pemegang Akaun</span><span><strong>' + (s.bankAccountHolder||'-') + '</strong></span></div>' +
+    '<div class="kv"><span>Bank</span><span><strong>' + esc(s.bankName||'-') + '</strong></span></div>' +
+    '<div class="kv"><span>Nombor Akaun</span><span><strong>' + esc(s.bankAccountNumber||'-') + '</strong></span></div>' +
+    '<div class="kv"><span>Nama Pemegang Akaun</span><span><strong>' + esc(s.bankAccountHolder||'-') + '</strong></span></div>' +
     '<button class="btn btn-primary btn-block" style="margin-top:14px;" onclick="sendFeeReceiptWhatsApp()">' + iconSvg('whatsapp') + ' Hantar Resit Bayaran via WhatsApp</button>' +
   '</div>';
   c.innerHTML =
@@ -2462,7 +2458,7 @@ function renderParentNotif(c){
   c.innerHTML = '<div class="card">'+(list.map(function(a){
     var imageHtml = a.image ? '<img src="'+a.image+'" alt="Poster" style="width:100%;max-width:360px;border-radius:10px;margin:8px 0;display:block;">' : '';
     var linkHtml = a.url ? '<a href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="margin-top:10px;display:inline-flex;">'+iconSvg('link')+' Buka Pautan</a>' : '';
-    return '<div style="padding:16px 20px;border-bottom:1px solid var(--border);"><h4 style="font-size:14.5px;">'+a.title+'</h4><p style="font-size:12.5px;color:var(--muted);margin:4px 0 8px;">'+fmtDate(a.date)+'</p>'+imageHtml+'<p style="font-size:13.5px;">'+a.body+'</p>'+linkHtml+'</div>';
+    return '<div style="padding:16px 20px;border-bottom:1px solid var(--border);"><h4 style="font-size:14.5px;">'+esc(a.title)+'</h4><p style="font-size:12.5px;color:var(--muted);margin:4px 0 8px;">'+fmtDate(a.date)+'</p>'+imageHtml+'<p style="font-size:13.5px;">'+esc(a.body)+'</p>'+linkHtml+'</div>';
   }).join('') || '<div class="empty-state">Tiada notifikasi.</div>')+'</div>';
   if(appState.currentUser){
     markAnnouncementsSeen(appState.currentUser.id, list.map(function(a){return a.id;}));
@@ -2472,9 +2468,9 @@ function renderParentNotif(c){
 function renderParentProfile(c){
   var u = appState.currentUser;
   c.innerHTML =
-  '<div class="card card-pad" style="max-width:480px;"><div style="display:flex;gap:14px;align-items:center;margin-bottom:20px;"><div class="avatar" style="width:56px;height:56px;font-size:17px;">'+initials(u.name)+'</div><div><h3 style="font-size:17px;">'+u.name+'</h3><p style="font-size:13px;color:var(--muted);">'+u.email+'</p></div></div>'+
-  '<div class="field"><label>Nama</label><input type="text" value="'+u.name+'"></div>'+
-  '<div class="field"><label>Email</label><input type="email" value="'+u.email+'" disabled></div>'+
+  '<div class="card card-pad" style="max-width:480px;"><div style="display:flex;gap:14px;align-items:center;margin-bottom:20px;"><div class="avatar" style="width:56px;height:56px;font-size:17px;">'+initials(u.name)+'</div><div><h3 style="font-size:17px;">'+esc(u.name)+'</h3><p style="font-size:13px;color:var(--muted);">'+esc(u.email)+'</p></div></div>'+
+  '<div class="field"><label>Nama</label><input type="text" value="'+esc(u.name)+'"></div>'+
+  '<div class="field"><label>Email</label><input type="email" value="'+esc(u.email)+'" disabled></div>'+
   '<button class="btn btn-primary btn-block" onclick="toast(\'Profil dikemaskini (simulasi).\')">Simpan Perubahan</button>'+
   '<button class="btn btn-outline btn-block" style="margin-top:10px;" onclick="logout()">Log Keluar</button></div>';
 }
@@ -2484,16 +2480,17 @@ function renderParentProfile(c){
 ========================================================= */
 function populateRegClassOptions(){
   var sel = document.getElementById('regKelas');
-  sel.innerHTML = '<option value="">Pilih kelas</option>' + appState.classes.map(function(cl){ return '<option value="'+cl.id+'">'+cl.name+' ('+cl.time+')</option>'; }).join('');
+  sel.innerHTML = '<option value="">Pilih kelas</option>' + appState.classes.map(function(cl){ return '<option value="'+cl.id+'">'+esc(cl.name)+' ('+esc(cl.time)+')</option>'; }).join('');
 }
 function handleRegistration(e){
   e.preventDefault();
   ['regNamaAnakF','regTarikhLahirF','regNamaPenjagaF','regWhatsappF','regKelasF'].forEach(clearFieldError);
-  var namaAnak = document.getElementById('regNamaAnak').value.trim();
+  var namaAnak = document.getElementById('regNamaAnak').value.trim().slice(0,100);
   var tarikhLahir = document.getElementById('regTarikhLahir').value;
-  var namaPenjaga = document.getElementById('regNamaPenjaga').value.trim();
+  var namaPenjaga = document.getElementById('regNamaPenjaga').value.trim().slice(0,100);
   var whatsapp = document.getElementById('regWhatsapp').value.trim();
   var kelas = document.getElementById('regKelas').value;
+  var catatan = document.getElementById('regCatatan').value.trim().slice(0,500);
   var ok = true;
   if(!namaAnak){ setFieldError('regNamaAnakF'); ok=false; }
   if(!tarikhLahir){ setFieldError('regTarikhLahirF'); ok=false; }
@@ -2504,15 +2501,15 @@ function handleRegistration(e){
 
   appState.registrations.unshift({
     id: uid('reg'), childName:namaAnak, dob:tarikhLahir, guardianName:namaPenjaga, phone:whatsapp.replace(/[-\s]/g,''),
-    level: document.getElementById('regTahap').value, classPreference: kelas, notes: document.getElementById('regCatatan').value.trim(),
+    level: document.getElementById('regTahap').value, classPreference: kelas, notes: catatan,
     status:'Pending', submittedAt: todayISO()
   });
-  pushNotification('Pendaftaran baru daripada '+namaPenjaga+' untuk anak '+namaAnak+' menunggu semakan.');
+  pushNotification('Pendaftaran baru daripada '+esc(namaPenjaga)+' untuk anak '+esc(namaAnak)+' menunggu semakan.');
   saveData();
   document.getElementById('regForm').reset();
   openModal('Permohonan Dihantar!',
     '<div style="text-align:center;padding:10px 0;"><div style="width:64px;height:64px;border-radius:50%;background:var(--emerald-light);color:var(--emerald);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">'+iconSvg('check')+'</div>'+
-    '<p style="font-size:14.5px;">Terima kasih! Permohonan pendaftaran <strong>'+namaAnak+'</strong> telah diterima. Admin akan menyemak dan menghubungi anda melalui WhatsApp selepas permohonan diluluskan.</p></div>',
+    '<p style="font-size:14.5px;">Terima kasih! Permohonan pendaftaran <strong>'+esc(namaAnak)+'</strong> telah diterima. Admin akan menyemak dan menghubungi anda melalui WhatsApp selepas permohonan diluluskan.</p></div>',
     '<button class="btn btn-primary btn-block" onclick="closeModal(); go(\'/\')">Kembali ke Laman Utama</button>');
   return false;
 }
