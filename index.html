@@ -1110,27 +1110,28 @@ async function fetchAllSystemUsers(){
 // Teknik "Secondary App": cipta akaun Firebase Auth baharu untuk orang lain
 // TANPA mengganggu sesi log masuk admin semasa. Ini keperluan teknikal Firebase
 // (createUserWithEmailAndPassword secara normal akan log masuk sebagai akaun baharu tu).
-function createAuthUserSecondary(email, password){
-  return new Promise(function(resolve, reject){
-    try{
-      var secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary_'+Date.now());
-      secondaryApp.auth().createUserWithEmailAndPassword(email, password).then(function(cred){
-        return secondaryApp.auth().signOut().then(function(){
-          return secondaryApp.delete();
-        }).then(function(){ resolve(cred.user.uid); });
-      }).catch(function(err){
-        secondaryApp.delete().catch(function(){});
-        reject(err);
-      });
-    }catch(e){ reject(e); }
-  });
-}
-
+//
+// PENTING - operasi ini ATOMIK: kalau simpan peranan ke Firestore GAGAL selepas
+// akaun log masuk berjaya dicipta, akaun log masuk tu akan di-ROLLBACK (dipadam
+// semula) secara automatik. Ini elak "akaun separuh jalan" yang menyekat
+// percubaan seterusnya dengan ralat "email sudah digunakan".
 async function createSystemUser(email, password, name, role, linkedId, guardianName){
-  await createAuthUserSecondary(email, password);
-  await fbDB.collection('users').doc(email).set({
-    name: name, role: role, linkedId: linkedId, guardianName: guardianName || null, status: 'Aktif'
-  });
+  var secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary_'+Date.now()+'_'+Math.random().toString(36).slice(2,6));
+  try{
+    var cred = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
+    try{
+      await fbDB.collection('users').doc(email).set({
+        name: name, role: role, linkedId: linkedId, guardianName: guardianName || null, status: 'Aktif'
+      });
+    }catch(firestoreErr){
+      try{ await cred.user.delete(); }
+      catch(rollbackErr){ console.error('AMARAN: gagal rollback akaun separuh jalan untuk '+email+'. Mungkin perlu padam manual dalam Firebase Console > Authentication.', rollbackErr); }
+      throw firestoreErr;
+    }
+  } finally {
+    try{ await secondaryApp.auth().signOut(); }catch(e){}
+    try{ await secondaryApp.delete(); }catch(e){}
+  }
 }
 async function deactivateSystemUser(email){
   await fbDB.collection('users').doc(email).update({status: 'Tidak Aktif'});
@@ -1885,6 +1886,7 @@ async function submitNewUser(){
     if(err.code==='auth/email-already-in-use') msg = 'Email ini sudah didaftarkan dalam Firebase Authentication.';
     else if(err.code==='auth/weak-password') msg = 'Kata laluan terlalu lemah.';
     else if(err.code==='auth/invalid-email') msg = 'Format email tidak sah.';
+    else if(err.code==='permission-denied') msg = 'Gagal simpan peranan ke Firestore (akses ditolak). Semak Security Rules anda sudah benarkan akses ke collection "users".';
     toast(msg, 'error');
     if(btn){ btn.disabled = false; btn.textContent = 'Cipta Akaun'; }
   }
