@@ -1002,6 +1002,24 @@ function resetDemoData(){
   router();
 }
 
+// Padam SEMUA data pelajar/guru/kelas rekaan & rekod berkaitan (kehadiran, bacaan,
+// yuran, pendaftaran, cuti) supaya sistem bersedia untuk data sebenar.
+// Dikekalkan: Tetapan (bank, nama pusat), Pengumuman, Notifikasi, dan akaun log masuk
+// (Firestore 'users' collection) - supaya admin tak ter-logout atau hilang konfigurasi.
+function wipeOperationalDataForLaunch(){
+  appState.students = [];
+  appState.teachers = [];
+  appState.classes = [];
+  appState.attendance = [];
+  appState.readingRecords = [];
+  appState.feePayments = [];
+  appState.registrations = [];
+  appState.leaveRequests = [];
+  saveData();
+  toast('Semua data pelajar, guru, kelas dan rekod berkaitan telah dipadam. Sistem sedia untuk data sebenar.');
+  router();
+}
+
 /* ---------- TOAST ---------- */
 function toast(msg, type){
   var host = document.getElementById('toastHost');
@@ -2170,6 +2188,22 @@ function deleteAnnouncement(id){
 function confirmResetDemoData(){
   confirmAction('Reset semua data demo? Semua perubahan akan hilang.', resetDemoData);
 }
+function confirmWipeOperationalData(){
+  openModal('Padam Semua Data Pelajar & Guru',
+    '<p style="font-size:14px;margin-bottom:14px;">Tindakan ini akan <strong>memadam secara kekal</strong>:</p>'+
+    '<ul style="font-size:13.5px;line-height:1.9;margin-bottom:14px;padding-left:20px;">'+
+      '<li>Semua rekod <strong>Pelajar</strong></li>'+
+      '<li>Semua rekod <strong>Guru</strong></li>'+
+      '<li>Semua <strong>Kelas</strong></li>'+
+      '<li>Semua <strong>Kehadiran</strong>, <strong>Rekod Bacaan</strong>, <strong>Yuran</strong></li>'+
+      '<li>Semua <strong>Pendaftaran</strong> dan <strong>Permohonan Cuti</strong></li>'+
+    '</ul>'+
+    '<p style="font-size:13.5px;margin-bottom:14px;color:var(--muted);">Dikekalkan: Tetapan (bank/nama pusat), Pengumuman, dan akaun log masuk sedia ada.</p>'+
+    '<div class="helper-note" style="background:var(--danger-light);border-color:var(--danger);color:var(--danger);">Nota: Akaun log masuk guru/ibu bapa (dalam "Pengguna Sistem") TIDAK dipadam automatik. Lepas ni, semak dan padam/kemaskini akaun log masuk yang tak lagi berkaitan rekod yang dipadam.</div>'+
+    '<div class="field" style="margin-top:16px;"><label>Taip <strong>PADAM</strong> untuk sahkan</label><input type="text" id="wipeConfirmInput" oninput="document.getElementById(\'wipeConfirmBtn\').disabled = (this.value !== \'PADAM\')"></div>',
+    '<button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-danger" id="wipeConfirmBtn" disabled onclick="wipeOperationalDataForLaunch(); closeModal();">Padam Semua</button>',
+    true);
+}
 function renderAdminSettings(c){
   var s = appState.settings || {};
   c.innerHTML =
@@ -2185,10 +2219,15 @@ function renderAdminSettings(c){
   '<div class="field"><label>Nombor WhatsApp Terima Resit</label><input type="tel" id="setWaReceipt" value="' + (s.whatsappReceiptNumber||'') + '" placeholder="Contoh: 0173311580"><span class="hint">Ibu bapa akan hantar resit bayaran ke nombor ini melalui butang di halaman Yuran mereka.</span></div>' +
   '<button class="btn btn-primary" onclick="saveAdminSettings()">Simpan Tetapan</button>' +
   '</div>' +
-  '<div class="card card-pad" style="max-width:640px;">' +
+  '<div class="card card-pad" style="max-width:640px;margin-bottom:20px;">' +
   '<div class="settings-row"><div><div class="lbl">Notifikasi WhatsApp Automatik</div><div class="desc">Hantar peringatan kehadiran &amp; yuran</div></div><label class="switch"><input type="checkbox" checked><span class="slider-tog"></span></label></div>' +
   '<div class="settings-row"><div><div class="lbl">Mod Gelap</div><div class="desc">Akan datang pada kemas kini seterusnya</div></div><label class="switch"><input type="checkbox" disabled><span class="slider-tog"></span></label></div>' +
-  '<div class="settings-row"><div><div class="lbl">Reset Data Demo</div><div class="desc">Kembalikan semua data kepada tetapan asal</div></div><button class="btn btn-danger btn-sm" onclick="confirmResetDemoData()">Reset Data</button></div>' +
+  '<div class="settings-row"><div><div class="lbl">Reset Data Demo</div><div class="desc">Kembalikan semua data kepada data contoh asal (untuk ujian/demo)</div></div><button class="btn btn-danger btn-sm" onclick="confirmResetDemoData()">Reset Data</button></div>' +
+  '</div>' +
+  '<div class="card card-pad" style="max-width:640px;border:1.5px solid var(--danger);">' +
+  '<h3 style="font-size:15.5px;margin-bottom:6px;color:var(--danger);">Persediaan Pelancaran</h3>' +
+  '<p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Sedia untuk guna sistem sebenar? Padam semua data pelajar/guru/kelas rekaan (ujian) sebelum mula masukkan data sebenar pusat mengaji anda.</p>' +
+  '<button class="btn btn-danger btn-block" onclick="confirmWipeOperationalData()">Padam Semua Data Pelajar & Guru (Ujian)</button>' +
   '</div>';
 }
 function saveAdminSettings(){
