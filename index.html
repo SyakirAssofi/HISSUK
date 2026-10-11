@@ -960,9 +960,14 @@ async function loadData(){
       docRef.onSnapshot(function(liveSnap){
         if(liveSnap.exists && liveSnap.metadata.hasPendingWrites === false){
           var cu = appState.currentUser;
+          var keepAttendance = appState.attendance;
           appState = liveSnap.data();
           ensureStateDefaults(appState);
+          // Jika kehadiran sudah dalam collection berasingan, JANGAN buang data kehadiran
+          // dalam memori (ia tidak lagi wujud dalam dokumen mainData).
+          if(appState.attendanceMigrated === true){ appState.attendance = keepAttendance || []; }
           appState.currentUser = cu;
+          syncAttendanceListeners();
           if(appState.currentUser){ router(); }
         }
       });
@@ -980,7 +985,11 @@ async function loadData(){
 
 async function saveData(){
   var toSave = {};
-  PERSISTED_STATE_KEYS.forEach(function(k){ toSave[k] = appState[k]; });
+  PERSISTED_STATE_KEYS.forEach(function(k){
+    if(k === 'attendance' && appState.attendanceMigrated === true) return; // kini dalam collection 'attendance'
+    toSave[k] = appState[k];
+  });
+  toSave.attendanceMigrated = appState.attendanceMigrated === true;
   toSave.settings = appState.settings;
   localStorage.setItem('emengaji_data', JSON.stringify(toSave));
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED){
@@ -992,12 +1001,194 @@ async function saveData(){
     }
   }
 }
-function resetDemoData(){
+/* =========================================================
+   KEHADIRAN DALAM COLLECTION BERASINGAN ('attendance')
+   - Satu dokumen setiap sesi kelas: ID = <idKelas>_<tarikh>
+     { classId, date, records:{ <idPelajar>:{status,note} }, updatedAt, updatedBy }
+   - Guru yang simpan kehadiran cuma menulis dokumen sesi tersebut, jadi
+     tak lagi menimpa data guru lain / data pelajar / yuran (masalah "last-write-wins").
+   - Dalam memori, appState.attendance kekal senarai rata seperti dulu, supaya
+     semua halaman sedia ada terus berfungsi tanpa diubah.
+   - Hanya ATTENDANCE_WINDOW_DAYS hari terkini dimuat secara automatik (jimat bacaan
+     Firestore). Tarikh lebih lama dimuat atas permintaan (laporan, paparan admin).
+   ========================================================= */
+var ATTENDANCE_WINDOW_DAYS = 120;
+var attendanceUnsubs = {};
+var attendanceRerenderTimer = null;
+var attendanceWarned = {};
+
+function firebaseOn(){ return (typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED); }
+function attendanceInCollection(){ return firebaseOn() && appState.attendanceMigrated === true; }
+function attendanceWindowStart(){
+  var d = new Date(); d.setDate(d.getDate() - ATTENDANCE_WINDOW_DAYS);
+  return d.toISOString().slice(0,10);
+}
+function warnAttendanceOnce(key, msg){
+  if(attendanceWarned[key]) return;
+  attendanceWarned[key] = true;
+  toast(msg, 'warn');
+}
+function attendanceErrorMessage(err){
+  if(err && err.code === 'permission-denied') return 'Akses ke collection "attendance" ditolak. Semak Security Rules dalam Firebase Console.';
+  return 'Gagal berhubung dengan pangkalan data kehadiran. Semak sambungan internet.';
+}
+function flattenAttendanceSession(data){
+  var out = [];
+  if(!data || !data.records || !data.classId || !data.date) return out;
+  Object.keys(data.records).forEach(function(studentId){
+    var r = data.records[studentId] || {};
+    out.push({id: data.classId+'|'+data.date+'|'+studentId, date:data.date, classId:data.classId, studentId:studentId, status:r.status||'Hadir', note:r.note||''});
+  });
+  return out;
+}
+function mergeAttendanceSession(data){
+  if(!data || !data.classId || !data.date) return;
+  appState.attendance = appState.attendance.filter(function(a){ return !(a.classId===data.classId && a.date===data.date); });
+  flattenAttendanceSession(data).forEach(function(r){ appState.attendance.push(r); });
+}
+function scheduleAttendanceRerender(){
+  if(attendanceRerenderTimer) clearTimeout(attendanceRerenderTimer);
+  attendanceRerenderTimer = setTimeout(function(){
+    attendanceRerenderTimer = null;
+    if(!appState.currentUser) return;
+    var y = window.pageYOffset || 0;
+    router();
+    window.scrollTo(0, y);
+  }, 250);
+}
+function attendanceClassIdsForCurrentUser(){
+  var u = appState.currentUser;
+  if(!u) return [];
+  if(u.role === 'admin') return appState.classes.map(function(c){return c.id;});
+  if(u.role === 'guru') return appState.classes.filter(function(c){return c.teacherId===u.id;}).map(function(c){return c.id;});
+  if(u.role === 'parent'){
+    var ids = {};
+    getMyChildren().forEach(function(s){ if(s.classId) ids[s.classId] = true; });
+    return Object.keys(ids);
+  }
+  return [];
+}
+function subscribeAttendanceClass(cid){
+  var FP = firebase.firestore.FieldPath;
+  var q = fbDB.collection('attendance')
+    .where(FP.documentId(), '>=', cid+'_'+attendanceWindowStart())
+    .where(FP.documentId(), '<=', cid+'_9999-99-99');
+  return q.onSnapshot(function(snap){
+    if(snap.metadata && snap.metadata.hasPendingWrites) return; // tulisan sendiri - memori sudah dikemaskini
+    var cutoff = attendanceWindowStart();
+    appState.attendance = appState.attendance.filter(function(a){ return !(a.classId===cid && a.date>=cutoff); });
+    snap.forEach(function(doc){ flattenAttendanceSession(doc.data()).forEach(function(r){ appState.attendance.push(r); }); });
+    scheduleAttendanceRerender();
+  }, function(err){
+    console.error('Gagal dengar kehadiran kelas '+cid, err);
+    warnAttendanceOnce('listen', attendanceErrorMessage(err));
+  });
+}
+function syncAttendanceListeners(){
+  if(!attendanceInCollection()) return;
+  var wanted = attendanceClassIdsForCurrentUser();
+  Object.keys(attendanceUnsubs).forEach(function(cid){
+    if(wanted.indexOf(cid) === -1){
+      try{ attendanceUnsubs[cid](); }catch(e){}
+      delete attendanceUnsubs[cid];
+      appState.attendance = appState.attendance.filter(function(a){ return a.classId !== cid; });
+    }
+  });
+  wanted.forEach(function(cid){
+    if(!attendanceUnsubs[cid]) attendanceUnsubs[cid] = subscribeAttendanceClass(cid);
+  });
+}
+function stopAttendanceSync(){
+  Object.keys(attendanceUnsubs).forEach(function(cid){ try{ attendanceUnsubs[cid](); }catch(e){} });
+  attendanceUnsubs = {};
+  if(attendanceInCollection()) appState.attendance = [];
+}
+// Muat sesi tarikh tertentu (jika di luar tetingkap automatik)
+async function ensureAttendanceDateLoaded(dateISO, classIds){
+  if(!attendanceInCollection() || !dateISO || dateISO >= attendanceWindowStart()) return;
+  await Promise.all(classIds.map(async function(cid){
+    try{
+      var s = await fbDB.collection('attendance').doc(cid+'_'+dateISO).get();
+      if(s.exists) mergeAttendanceSession(s.data());
+    }catch(e){ console.error(e); warnAttendanceOnce('load', attendanceErrorMessage(e)); }
+  }));
+}
+// Muat satu bulan penuh (untuk laporan bulan lama)
+async function ensureAttendanceMonthLoaded(monthKey, classIds){
+  if(!attendanceInCollection() || monthKey+'-01' >= attendanceWindowStart()) return;
+  var FP = firebase.firestore.FieldPath;
+  await Promise.all(classIds.map(async function(cid){
+    try{
+      var snap = await fbDB.collection('attendance')
+        .where(FP.documentId(), '>=', cid+'_'+monthKey+'-01')
+        .where(FP.documentId(), '<=', cid+'_'+monthKey+'-31').get();
+      snap.forEach(function(doc){ mergeAttendanceSession(doc.data()); });
+    }catch(e){ console.error(e); warnAttendanceOnce('load', attendanceErrorMessage(e)); }
+  }));
+}
+// Padam semua dokumen kehadiran (guna oleh "Padam Data" dan "Reset Demo")
+async function clearAttendanceCollection(){
+  var snap = await fbDB.collection('attendance').get();
+  var refs = [];
+  snap.forEach(function(d){ refs.push(d.ref); });
+  for(var i=0; i<refs.length; i+=400){
+    var b = fbDB.batch();
+    refs.slice(i, i+400).forEach(function(r){ b.delete(r); });
+    await b.commit();
+  }
+}
+// Migrasi SEKALI: pindahkan kehadiran lama dalam mainData ke collection 'attendance'.
+// Hanya dijalankan oleh admin. Jika gagal (cth. Security Rules belum dikemas kini),
+// sistem kekal guna cara lama - tiada data hilang.
+async function migrateAttendanceToCollection(){
+  if(appState.attendanceMigrated === true) return;
+  try{
+    var sessions = {};
+    (appState.attendance || []).forEach(function(a){
+      var id = a.classId+'_'+a.date;
+      if(!sessions[id]) sessions[id] = {classId:a.classId, date:a.date, records:{}, updatedAt:new Date().toISOString(), updatedBy:'migrasi'};
+      sessions[id].records[a.studentId] = {status:a.status, note:a.note || ''};
+    });
+    var ids = Object.keys(sessions);
+    for(var i=0; i<ids.length; i+=400){
+      var batch = fbDB.batch();
+      ids.slice(i, i+400).forEach(function(id){ batch.set(fbDB.collection('attendance').doc(id), sessions[id]); });
+      await batch.commit();
+    }
+    if(ids.length === 0){
+      // tiada data lama - uji kebenaran tulis dahulu sebelum tukar mod
+      var probe = fbDB.collection('attendance').doc('_probe');
+      await probe.set({t:new Date().toISOString()});
+      await probe.delete();
+    }
+    appState.attendanceMigrated = true;
+    await saveData();
+    console.log('Kehadiran dipindahkan ke collection "attendance" ('+ids.length+' sesi).');
+  }catch(e){
+    console.error('Migrasi kehadiran gagal - kekal guna mod lama:', e);
+    appState.attendanceMigrated = false;
+    warnAttendanceOnce('migrate', 'Kehadiran belum dipindahkan ke collection berasingan. Semak Security Rules (collection "attendance"). Sistem terus berfungsi seperti biasa buat sementara.');
+  }
+}
+async function onSessionReady(){
+  if(!firebaseOn() || !appState.currentUser) return;
+  if(appState.currentUser.role === 'admin') await migrateAttendanceToCollection();
+  syncAttendanceListeners();
+}
+
+async function resetDemoData(){
+  var wasCollection = attendanceInCollection();
+  if(wasCollection){
+    try{ await clearAttendanceCollection(); }
+    catch(e){ toast(attendanceErrorMessage(e), 'error'); return; }
+  }
   localStorage.removeItem('emengaji_data');
   var user = appState.currentUser;
   appState = generateSeedData();
   appState.currentUser = user;
+  if(wasCollection){ appState.attendance = []; appState.attendanceMigrated = true; }
   saveData();
+  syncAttendanceListeners();
   toast('Data demo telah ditetapkan semula.');
   router();
 }
@@ -1006,7 +1197,11 @@ function resetDemoData(){
 // yuran, pendaftaran, cuti) supaya sistem bersedia untuk data sebenar.
 // Dikekalkan: Tetapan (bank, nama pusat), Pengumuman, Notifikasi, dan akaun log masuk
 // (Firestore 'users' collection) - supaya admin tak ter-logout atau hilang konfigurasi.
-function wipeOperationalDataForLaunch(){
+async function wipeOperationalDataForLaunch(){
+  if(attendanceInCollection()){
+    try{ await clearAttendanceCollection(); }
+    catch(e){ toast('Pemadaman dihentikan: '+attendanceErrorMessage(e), 'error'); return; }
+  }
   appState.students = [];
   appState.teachers = [];
   appState.classes = [];
@@ -1190,6 +1385,7 @@ async function handleLogin(e){
       appState.currentUser = {email:email, role:acc.role, name:acc.name, id:acc.id, guardianName:acc.guardianName||null};
       sessionStorage.setItem('emengaji_user', JSON.stringify(appState.currentUser));
       toast('Log masuk berjaya. Selamat kembali, '+acc.name+'!');
+      onSessionReady();
       redirectByRole(acc.role);
     }catch(err){
       console.error(err);
@@ -1211,6 +1407,7 @@ async function handleLogin(e){
   return false;
 }
 function logout(){
+  stopAttendanceSync();
   appState.currentUser = null;
   sessionStorage.removeItem('emengaji_user');
   if(typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED && fbAuth){
@@ -1936,9 +2133,11 @@ function renderAdminAttendance(c){
   '<div class="card"><div class="table-wrap"><table><thead><tr><th>Pelajar</th><th>Kelas</th><th>Status</th><th>Catatan</th></tr></thead><tbody id="attTableBody"></tbody></table></div></div>';
   renderAdminAttTable();
 }
-function renderAdminAttTable(){
+async function renderAdminAttTable(){
   var cls = document.getElementById('attClassSel').value;
   var date = document.getElementById('attDateSel').value;
+  await ensureAttendanceDateLoaded(date, cls ? [cls] : appState.classes.map(function(x){return x.id;}));
+  if(!document.getElementById('attTableBody')) return;
   var recs = appState.attendance.filter(function(a){return a.date===date;});
   if(cls) recs = recs.filter(function(a){return a.classId===cls;});
   var body = document.getElementById('attTableBody');
@@ -2025,11 +2224,21 @@ function renderAdminReports(c){
   '<div class="card card-pad"><h3 style="margin-bottom:10px;">Tips</h3><p style="font-size:13.5px;color:var(--muted);">Laporan yang dijana boleh terus dicetak atau disimpan sebagai PDF menggunakan fungsi cetak pelayar (Ctrl/Cmd + P). Reka bentuk laporan telah dioptimumkan untuk kertas A4.</p></div>'+
   '</div><div id="reportPreviewHost"></div>';
 }
+// Muat kehadiran bulan berkenaan (jika bulan lama, di luar tetingkap automatik) kemudian papar laporan
+async function loadThenRenderReport(studentId, monthIdx, year, hostId){
+  var s = studentById(studentId);
+  if(s && s.classId){
+    var monthKey = year+'-'+pad(parseInt(monthIdx)+1);
+    await ensureAttendanceMonthLoaded(monthKey, [s.classId]);
+  }
+  var host = document.getElementById(hostId);
+  if(host) renderReportDoc(studentId, monthIdx, year, host);
+}
 function generateReport(){
   var studentId = document.getElementById('repStudent').value;
   var monthIdx = document.getElementById('repMonth').value;
   var year = document.getElementById('repYear').value;
-  renderReportDoc(studentId, monthIdx, year, document.getElementById('reportPreviewHost'));
+  loadThenRenderReport(studentId, monthIdx, year, 'reportPreviewHost');
 }
 function renderReportDoc(studentId, monthIdx, year, host){
   var s = studentById(studentId); if(!s) return;
@@ -2357,8 +2566,8 @@ function renderTeacherAttendance(c, teacher){
 
   var html = '';
   html += '<div class="input-row" style="margin-bottom:14px;">';
-  html += '<div class="field" style="margin-bottom:0;"><label>Kelas</label><select id="teachAttClass" onchange="teacherAttState.classId=this.value; renderTeacher(\'kehadiran\');">'+classOpts+'</select></div>';
-  html += '<div class="field" style="margin-bottom:0;"><label>Tarikh</label><input type="date" id="teachAttDate" value="'+teacherAttState.date+'" onchange="teacherAttState.date=this.value; renderTeacher(\'kehadiran\');"></div>';
+  html += '<div class="field" style="margin-bottom:0;"><label>Kelas</label><select id="teachAttClass" onchange="changeAttClass(this.value)">'+classOpts+'</select></div>';
+  html += '<div class="field" style="margin-bottom:0;"><label>Tarikh</label><input type="date" id="teachAttDate" value="'+teacherAttState.date+'" onchange="changeAttDate(this.value)"></div>';
   html += '</div>';
   html += '<div class="mini-stat-row"><div class="mini-stat"><b>'+hadirN+'</b><span>Hadir</span></div><div class="mini-stat"><b>'+tidakN+'</b><span>Tidak Hadir</span></div><div class="mini-stat"><b>'+roster.length+'</b><span>Jumlah</span></div></div>';
   html += '<button class="btn btn-outline btn-block" style="margin-bottom:14px;" onclick="markAllPresent()">'+iconSvg('check')+' Tandakan Semua Hadir</button>';
@@ -2390,18 +2599,48 @@ function markAllPresent(){
   renderTeacher('kehadiran');
   toast('Semua pelajar ditandakan hadir.');
 }
-function saveAttendance(){
+async function saveAttendance(){
   var classId = teacherAttState.classId, date = teacherAttState.date, rows = teacherAttState.rows;
+  if(!classId || !date){ toast('Sila pilih kelas dan tarikh.', 'error'); return; }
+  // 1) Kemaskini memori (UI terus nampak perubahan)
   Object.keys(rows).forEach(function(studentId){
     var rec = appState.attendance.filter(function(a){return a.studentId===studentId && a.classId===classId && a.date===date;})[0];
     if(rec){ rec.status = rows[studentId].status; rec.note = rows[studentId].note; }
     else appState.attendance.push({id:uid('a'), date:date, classId:classId, studentId:studentId, status:rows[studentId].status, note:rows[studentId].note});
   });
+  // 2) Mod collection: tulis HANYA dokumen sesi ini (tak sentuh data lain)
+  if(attendanceInCollection()){
+    var records = {};
+    Object.keys(rows).forEach(function(studentId){ records[studentId] = {status:rows[studentId].status, note:rows[studentId].note || ''}; });
+    try{
+      await fbDB.collection('attendance').doc(classId+'_'+date).set({
+        classId:classId, date:date, records:records,
+        updatedAt:new Date().toISOString(),
+        updatedBy: appState.currentUser ? appState.currentUser.email : ''
+      });
+    }catch(e){
+      console.error('Gagal simpan kehadiran:', e);
+      toast('Kehadiran GAGAL disimpan ke server. '+attendanceErrorMessage(e), 'error');
+      return;
+    }
+  }
   var clsObj = classById(classId);
   var teacherNameForNotif = appState.currentUser ? appState.currentUser.name : 'Seorang guru';
   pushNotification(esc(teacherNameForNotif)+' telah merekod kehadiran kelas '+(clsObj?esc(clsObj.name):'-')+' pada '+fmtDate(date)+'.');
   saveData();
   toast('Kehadiran berjaya disimpan!');
+}
+// Tukar kelas/tarikh dalam halaman kehadiran guru: pastikan sesi lama dimuat dahulu
+// supaya rekod sedia ada tak tertimpa oleh nilai lalai.
+async function changeAttClass(classId){
+  teacherAttState.classId = classId;
+  await ensureAttendanceDateLoaded(teacherAttState.date, [classId]);
+  renderTeacher('kehadiran');
+}
+async function changeAttDate(dateISO){
+  teacherAttState.date = dateISO;
+  await ensureAttendanceDateLoaded(dateISO, [teacherAttState.classId]);
+  renderTeacher('kehadiran');
 }
 function renderTeacherReading(c, teacher){
   var myStudents = studentsOfTeacher(teacher.id);
@@ -2649,7 +2888,7 @@ function renderParentReports(c){
   var monthOpts = monthNames.map(function(m,i){ return '<option value="'+i+'" '+(i===8?'selected':'')+'>'+m+'</option>'; }).join('');
   c.innerHTML =
   '<div class="card card-pad" style="max-width:480px;margin-bottom:20px;"><div class="input-row"><div class="field"><label>Bulan</label><select id="pRepMonth">'+monthOpts+'</select></div><div class="field"><label>Tahun</label><select id="pRepYear"><option>2026</option><option>2025</option></select></div></div>'+
-  '<button class="btn btn-primary btn-block" onclick="renderReportDoc(selectedChildId, document.getElementById(\'pRepMonth\').value, document.getElementById(\'pRepYear\').value, document.getElementById(\'pReportHost\'))">Papar Laporan</button></div>'+
+  '<button class="btn btn-primary btn-block" onclick="loadThenRenderReport(selectedChildId, document.getElementById(\'pRepMonth\').value, document.getElementById(\'pRepYear\').value, \'pReportHost\')">Papar Laporan</button></div>'+
   '<div id="pReportHost"></div>';
 }
 function renderParentFees(c){
@@ -2744,7 +2983,7 @@ function handleRegistration(e){
 /* =========================================================
    INIT
 ========================================================= */
-loadData().then(function(){ router(); });
+loadData().then(function(){ router(); onSessionReady(); });
 </script>
 </body>
 </html>
