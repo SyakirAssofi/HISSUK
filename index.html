@@ -1016,6 +1016,8 @@ var ATTENDANCE_WINDOW_DAYS = 120;
 var attendanceUnsubs = {};
 var attendanceRerenderTimer = null;
 var attendanceWarned = {};
+var attendanceMigrationLastError = '';
+var attendanceMigrationDiag = '';
 
 function firebaseOn(){ return (typeof FIREBASE_ENABLED !== 'undefined' && FIREBASE_ENABLED); }
 function attendanceInCollection(){ return firebaseOn() && appState.attendanceMigrated === true; }
@@ -1162,14 +1164,64 @@ async function migrateAttendanceToCollection(){
       await probe.delete();
     }
     appState.attendanceMigrated = true;
+    attendanceMigrationLastError = '';
+    attendanceMigrationDiag = '';
     await saveData();
     console.log('Kehadiran dipindahkan ke collection "attendance" ('+ids.length+' sesi).');
   }catch(e){
     console.error('Migrasi kehadiran gagal - kekal guna mod lama:', e);
+    attendanceMigrationLastError = ((e && e.code) ? e.code+': ' : '') + ((e && e.message) ? e.message : String(e));
     appState.attendanceMigrated = false;
     warnAttendanceOnce('migrate', 'Kehadiran belum dipindahkan ke collection berasingan. Semak Security Rules (collection "attendance"). Sistem terus berfungsi seperti biasa buat sementara.');
   }
 }
+// Semak rekod peranan admin dalam 'users' (peraturan attendance bergantung pada ini)
+async function diagnoseUserRoleDoc(){
+  var u = appState.currentUser;
+  if(!u) return '';
+  try{
+    var snap = await fbDB.collection('users').doc(u.email).get();
+    if(!snap.exists) return 'Rekod peranan untuk emel "'+u.email+'" TIDAK wujud dalam collection "users". Ini punca peraturan attendance menolak akses.';
+    var d = snap.data();
+    return 'Rekod peranan untuk "'+u.email+'": role = '+d.role+', status = '+(d.status||'Aktif')+'.';
+  }catch(e){
+    return 'Gagal baca rekod peranan: '+((e && e.code) ? e.code : String(e));
+  }
+}
+async function runAttendanceMigrationManually(){
+  var btn = document.getElementById('attMigBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Memindahkan...'; }
+  attendanceWarned = {};
+  await migrateAttendanceToCollection();
+  if(appState.attendanceMigrated === true){
+    syncAttendanceListeners();
+    toast('Berjaya! Kehadiran kini disimpan dalam collection "attendance".');
+  } else {
+    attendanceMigrationDiag = await diagnoseUserRoleDoc();
+    toast('Pemindahan gagal. Lihat butiran ralat dalam kad status.', 'error');
+  }
+  renderAdminSettings(document.getElementById('adminContent'));
+}
+function attendanceStatusCardHtml(){
+  if(!firebaseOn()) return '';
+  var h = '<div class="card card-pad" style="max-width:640px;margin-bottom:20px;">'+
+    '<h3 style="font-size:15.5px;margin-bottom:10px;">Status Pangkalan Data Kehadiran</h3>';
+  if(appState.attendanceMigrated === true){
+    h += '<p style="font-size:13.5px;color:var(--success);font-weight:600;">&#10003; Kehadiran sudah disimpan dalam collection berasingan ("attendance"). Tiada tindakan diperlukan.</p>';
+  } else {
+    h += '<p style="font-size:13.5px;margin-bottom:12px;">Kehadiran masih disimpan dalam mod lama (dalam dokumen utama). Sistem berfungsi seperti biasa. Tekan butang di bawah untuk memindahkannya ke collection berasingan.</p>';
+    if(attendanceMigrationLastError){
+      h += '<div class="helper-note" style="background:var(--danger-light);border-color:var(--danger);color:#7f1d1d;word-break:break-word;">'+
+        '<strong>Ralat terakhir:</strong><br>'+esc(attendanceMigrationLastError)+
+        (attendanceMigrationLastError.indexOf('permission-denied') !== -1 ? '<br><br><strong>Maksudnya:</strong> Firebase Security Rules menolak penulisan ke collection "attendance". Pastikan Rules sudah di-Publish. Jika masih gagal, guna versi ringkas peraturan attendance (<em>allow read, write: if request.auth != null;</em>).' : '')+
+        (attendanceMigrationDiag ? '<br><br><strong>Semakan peranan:</strong> '+esc(attendanceMigrationDiag) : '')+
+      '</div>';
+    }
+    h += '<button class="btn btn-primary" id="attMigBtn" onclick="runAttendanceMigrationManually()">Pindahkan Kehadiran Sekarang</button>';
+  }
+  return h + '</div>';
+}
+
 async function onSessionReady(){
   if(!firebaseOn() || !appState.currentUser) return;
   if(appState.currentUser.role === 'admin') await migrateAttendanceToCollection();
@@ -1649,6 +1701,11 @@ function renderAdminDashboard(c){
     html += '</div></div>';
   }
 
+  if(firebaseOn() && appState.attendanceMigrated !== true){
+    html += '<div class="card card-pad" style="border:1.5px solid var(--warning);background:var(--warning-light);margin-bottom:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;">'+
+      '<div style="font-size:13.5px;"><strong>Kehadiran belum dipindahkan</strong> ke pangkalan data berasingan. Sistem masih berfungsi seperti biasa.</div>'+
+      '<button class="btn btn-outline btn-sm" onclick="go(\'/admin/tetapan\')">Lihat Status</button></div>';
+  }
   html += '<div class="stat-grid">';
   html += statCard('Jumlah Pelajar', activeStudents.length, 'Aktif: '+activeStudents.length+' &middot; Tidak aktif: '+(appState.students.length-activeStudents.length), 'students', 'var(--emerald)');
   html += statCard('Jumlah Guru', appState.teachers.length, 'Aktif: '+appState.teachers.length, 'teachers', 'var(--gold)');
@@ -2433,6 +2490,7 @@ function renderAdminSettings(c){
   '<div class="settings-row"><div><div class="lbl">Mod Gelap</div><div class="desc">Akan datang pada kemas kini seterusnya</div></div><label class="switch"><input type="checkbox" disabled><span class="slider-tog"></span></label></div>' +
   '<div class="settings-row"><div><div class="lbl">Reset Data Demo</div><div class="desc">Kembalikan semua data kepada data contoh asal (untuk ujian/demo)</div></div><button class="btn btn-danger btn-sm" onclick="confirmResetDemoData()">Reset Data</button></div>' +
   '</div>' +
+  attendanceStatusCardHtml() +
   '<div class="card card-pad" style="max-width:640px;border:1.5px solid var(--danger);">' +
   '<h3 style="font-size:15.5px;margin-bottom:6px;color:var(--danger);">Persediaan Pelancaran</h3>' +
   '<p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Sedia untuk guna sistem sebenar? Padam semua data pelajar/guru/kelas rekaan (ujian) sebelum mula masukkan data sebenar pusat mengaji anda.</p>' +
